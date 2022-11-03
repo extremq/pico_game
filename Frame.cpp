@@ -56,7 +56,7 @@ void Frame::compute_diff() {
 }
 
 // Fill a rectangle in the Frame buffer using memset
-void Frame::fill_rect(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t color) {
+void Frame::fill_rect(uint16_t col, uint16_t row, uint16_t h, uint16_t w, uint16_t color) {
     // Validity checks
     if (col >= this->_w || row >= this->_h) return;
     if (w < 1 || h < 1) return;
@@ -104,7 +104,7 @@ void Frame::line_verti(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
     }
 }
 
-void Frame::draw_rect(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t color) {
+void Frame::draw_rect(uint16_t col, uint16_t row, uint16_t h, uint16_t w, uint16_t color) {
     // Validity checks
     if (col >= this->_w || row >= this->_h) return;
     if (w < 1 || h < 1) return;
@@ -189,7 +189,7 @@ void Frame::fill_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) 
     }
 }
 
-void Frame::draw_sprite(uint16_t col, uint16_t row, uint16_t w, uint16_t h, const uint16_t *sprite) {
+void Frame::draw_sprite(uint16_t col, uint16_t row, uint16_t h, uint16_t w, const uint16_t *sprite) {
     // Validity checks
     if (col > this->_w || row > this->_h) return;
 

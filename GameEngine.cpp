@@ -14,6 +14,18 @@ void GameEngine::register_event(Event* e) {
 // Init all the needed modules.
 void GameEngine::init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res,
                       uint8_t spi_port, uint8_t xpin, uint8_t ypin) {
-    Display::get()->init(h, w, cs, dc, sda, scl, res, spi_port);
+    Display::get()->init(w, h, cs, dc, sda, scl, res, spi_port);
     Joystick::get()->init(xpin, ypin);
+}
+
+void GameEngine::start_game() {
+    while(true) {
+        uint64_t start_frame = time_us_64();
+        for(auto e : this->_event_list) {
+            e->on_frame_update();
+        }
+        Display::get()->load_frame();
+        uint64_t diff = time_us_64() - start_frame;
+        sleep_us(16000 - diff);
+    }
 }

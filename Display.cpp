@@ -181,19 +181,19 @@ void Display::init_lcd() {
 }
 
 /* Helper functions */
-void Display::set_cs(bool value) {
+void Display::set_cs_voltage(bool value) {
     asm volatile("nop \n nop \n nop");
     gpio_put(this->_cs, value);
     asm volatile("nop \n nop \n nop");
 }
 
-void Display::set_dc(bool value) {
+void Display::set_dc_voltage(bool value) {
     asm volatile("nop \n nop \n nop");
     gpio_put(this->_dc, value);
     asm volatile("nop \n nop \n nop");
 }
 
-void Display::set_res(bool value) {
+void Display::set_res_voltage(bool value) {
     asm volatile("nop \n nop \n nop");
     gpio_put(this->_res, value);
     asm volatile("nop \n nop \n nop");
@@ -204,17 +204,17 @@ void Display::set_res(bool value) {
  * DC selects either data or cmd
  */
 void Display::write_cmd(uint8_t cmd) {
-    this->set_dc(false);
-    this->set_cs(false);
+    this->set_dc_voltage(false);
+    this->set_cs_voltage(false);
     this->write_spi(cmd);
-    this->set_cs(true);
+    this->set_cs_voltage(true);
 }
 
 void Display::write_data(uint8_t* data, uint8_t len) {
-    this->set_dc(true);
-    this->set_cs(false);
+    this->set_dc_voltage(true);
+    this->set_cs_voltage(false);
     this->write_spi_n(data, len);
-    this->set_cs(true);
+    this->set_cs_voltage(true);
 }
 
 /* SPI writing helper function */
@@ -228,11 +228,11 @@ inline void Display::write_spi_n(uint8_t* data, uint16_t n) {
 
 /* Resetting function, as per datasheet */
 void Display::reset() {
-    this->set_res(true);
+    this->set_res_voltage(true);
     sleep_ms(10);
-    this->set_res(false);
+    this->set_res_voltage(false);
     sleep_ms(10);
-    this->set_res(true);
+    this->set_res_voltage(true);
     sleep_ms(10);
 }
 

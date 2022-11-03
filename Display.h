@@ -28,9 +28,9 @@ private:
     void init_pins(); /* Init functions */
     void init_lcd();
 
-    void set_cs(bool value); /* Setters */
-    void set_dc(bool value);
-    void set_res(bool value);
+    void set_cs_voltage(bool value); /* Setters */
+    void set_dc_voltage(bool value);
+    void set_res_voltage(bool value);
 
     void write_cmd(uint8_t cmd); /* Write abstracts */
     void write_data(uint8_t* data, uint8_t len);
@@ -58,7 +58,7 @@ public:
         return _instance;
     }
 
-    void init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res, uint8_t spi_port);
+    void init(uint8_t w, uint8_t h, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res, uint8_t spi_port);
     void load_frame();
 };
 

@@ -9,13 +9,14 @@
 #include <cstdint>
 
 class Event {
+private:
+    uint64_t _start_time = 0;
+    uint64_t _end_time = 0;
 public:
-    uint64_t start_time;
-    uint64_t end_time;
+    uint64_t get_start_time();
+    uint64_t get_end_time();
 
-    virtual void on_frame_update();
-    virtual void on_init();
-    virtual void on_destroy();
+    virtual void on_frame_update() {};
 };
 
 

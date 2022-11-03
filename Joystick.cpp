@@ -13,12 +13,12 @@ void Joystick::init(uint8_t xpin, uint8_t ypin) {
     adc_gpio_init(ypin);
 }
 
-uint16_t Joystick::x() {
+uint16_t Joystick::get_x() {
     adc_select_input(0);
     return adc_read();
 }
 
-uint16_t Joystick::y() {
+uint16_t Joystick::get_y() {
     adc_select_input(1);
     return adc_read();
 }

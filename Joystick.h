@@ -12,11 +12,11 @@ class Joystick {
 private:
     static Joystick* _instance;
     Joystick() = default;
-public:
     const uint16_t max_value = 4095;
+public:
 
-    uint16_t x();
-    uint16_t y();
+    uint16_t get_x();
+    uint16_t get_y();
 
     // Return singleton instance
     static Joystick* get() {
@@ -25,6 +25,11 @@ public:
         }
         return _instance;
     }
+
+    uint16_t get_max_value() {
+        return this->max_value;
+    }
+
     void init(uint8_t xpin, uint8_t ypin);
 
 };

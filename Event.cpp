@@ -4,14 +4,10 @@
 
 #include "Event.h"
 
-void Event::on_frame_update() {
-
+uint64_t Event::get_start_time() {
+    return this->_start_time;
 }
 
-void Event::on_init() {
-
-}
-
-void Event::on_destroy() {
-
+uint64_t Event::get_end_time() {
+    return this->_end_time;
 }
