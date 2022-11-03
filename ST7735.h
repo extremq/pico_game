@@ -138,6 +138,10 @@ public:
         this->screen_frame.fill_circle(col, row, r, color);
     }
 
+    inline void draw_sprite(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t* sprite) {
+        this->screen_frame.draw_sprite(col, row, w, h, sprite);
+    }
+
     void load_frame();
 };
 

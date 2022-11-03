@@ -128,6 +128,7 @@ void Frame::draw_rect(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16
 }
 
 // Pretty expensive? Should use sprites instead.
+// Either way I only process one quadrant and use symmetry to render the rest of the quadrants
 void Frame::draw_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) {
     // Validity checks
     if (col > this->_w || row > this->_h) return;
@@ -189,7 +190,22 @@ void Frame::fill_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) 
 }
 
 void Frame::draw_sprite(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t *sprite) {
+    // Validity checks
+    if (col > this->_w || row > this->_h) return;
 
+    // Clamping
+    if (col + w > this->_w)
+        w = this->_w - col;
+
+    if (row + h > this->_h)
+        h = this->_h - row;
+
+    uint16_t i = 0;
+    for (uint16_t y = row; y < row + h; ++y) {
+        for (uint16_t x = col; x < col + w; ++x, ++i) {
+            this->_buffer[x + y * this->_h] = sprite[i];
+        }
+    }
 }
 
 Frame::Frame() {
