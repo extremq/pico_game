@@ -12,7 +12,7 @@
 #include <cstdint>
 #include "hardware/spi.h"
 #include "pico/stdlib.h"
-#include "frame.h"
+#include "Frame.h"
 
 #define X_START 2
 #define Y_START 3
@@ -86,11 +86,11 @@
 #define ST7735_GMCTRP1 0xE0
 #define ST7735_GMCTRN1 0xE1
 
-class st7735 {
+class ST7735 {
 private:
     uint8_t spi_port, height, width;
     uint8_t cs, dc, sda, scl, res; /* Pins on PCB */
-    frame screen_frame;
+    Frame screen_frame;
 
     void init_pins(); /* Init functions */
     void init_lcd();
@@ -109,7 +109,7 @@ private:
     void reset();
 
 public:
-    st7735();
+    ST7735();
 
     void init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res, uint8_t spi_port);
 

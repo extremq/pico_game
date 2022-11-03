@@ -3,25 +3,25 @@
 //
 
 #include <cmath>
-#include "frame.h"
+#include "Frame.h"
 
-uint16_t *frame::get_buffer() {
+uint16_t *Frame::get_buffer() {
     return this->_buffer;
 }
 
-bool *frame::get_diff() {
+bool *Frame::get_diff() {
     return this->_diff;
 }
 
-uint8_t frame::get_width() {
+uint8_t Frame::get_width() {
     return this->_w;
 }
 
-uint8_t frame::get_height() {
+uint8_t Frame::get_height() {
     return this->_h;
 }
 
-void frame::init(uint8_t h, uint8_t w) {
+void Frame::init(uint8_t h, uint8_t w) {
     this->_h = h;
     this->_w = w;
     this->_buffer = new uint16_t [w * h];
@@ -29,7 +29,7 @@ void frame::init(uint8_t h, uint8_t w) {
     this->_diff = new bool [w * h];
 
     // Set buffer to black, while also setting
-    // last frame to some other value. We don't
+    // last Frame to some other value. We don't
     // want them to be the same otherwise we
     // can't init the first screen.
 
@@ -40,14 +40,14 @@ void frame::init(uint8_t h, uint8_t w) {
 }
 
 // Safely deallocate memory
-frame::~frame() {
+Frame::~Frame() {
     delete [] this->_buffer;
     delete [] this->_last_frame;
     delete [] this->_diff;
 }
 
-// Compute difference between frame and last_frame in the diff matrix
-void frame::compute_diff() {
+// Compute difference between Frame and last_frame in the diff matrix
+void Frame::compute_diff() {
     for (uint16_t i = 0; i < this->_h * this->_w; ++i) {
         // If the pixel is different, then diff is one there.
         this->_diff[i] = (this->_buffer[i] != this->_last_frame[i]);
@@ -55,8 +55,8 @@ void frame::compute_diff() {
     }
 }
 
-// Fill a rectangle in the frame buffer using memset
-void frame::fill_rect(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t color) {
+// Fill a rectangle in the Frame buffer using memset
+void Frame::fill_rect(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t color) {
     // Validity checks
     if (col >= this->_w || row >= this->_h) return;
     if (w < 1 || h < 1) return;
@@ -77,7 +77,7 @@ void frame::fill_rect(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16
 }
 
 // Draw a horizontal line.
-void frame::line_horiz(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
+void Frame::line_horiz(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
     // Validity checks
     if (col >= this->_w || col >= this->_h) return;
     if (l < 1) return;
@@ -91,7 +91,7 @@ void frame::line_horiz(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
 }
 
 // Draw a vertical line.
-void frame::line_verti(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
+void Frame::line_verti(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
     // Validity checks
     if (col >= this->_w || col >= this->_h) return;
     if (l < 1) return;
@@ -104,7 +104,7 @@ void frame::line_verti(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
     }
 }
 
-void frame::draw_rect(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t color) {
+void Frame::draw_rect(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t color) {
     // Validity checks
     if (col >= this->_w || row >= this->_h) return;
     if (w < 1 || h < 1) return;
@@ -128,7 +128,7 @@ void frame::draw_rect(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16
 }
 
 // Pretty expensive? Should use sprites instead.
-void frame::draw_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) {
+void Frame::draw_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) {
     // Validity checks
     if (col > this->_w || row > this->_h) return;
 
@@ -158,7 +158,7 @@ void frame::draw_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) 
     }
 }
 
-void frame::fill_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) {
+void Frame::fill_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) {
     // Validity checks
     if (col > this->_w || row > this->_h) return;
 
@@ -188,11 +188,11 @@ void frame::fill_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) 
     }
 }
 
-void frame::draw_sprite(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t *sprite) {
+void Frame::draw_sprite(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t *sprite) {
 
 }
 
-frame::frame() {
+Frame::Frame() {
     this->_w = 0;
     this->_h = 0;
     this->_buffer = nullptr;

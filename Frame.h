@@ -8,26 +8,26 @@
 #include <cstdint>
 
 /*
- * Class for operating on frame buffers.
+ * Class for operating on Frame buffers.
  *
  * Basically, all draws will be simulated in this _buffer instead of actually
  * sending them to the lcd ram. This way, I can compute a difference matrix
- * between the current frame and the last frame and only send different pixels.
+ * between the current Frame and the last Frame and only send different pixels.
  */
 
-class frame {
+class Frame {
 private:
     uint16_t* _last_frame;
     uint8_t _h, _w;
     uint16_t* _buffer;
     bool* _diff;
 public:
-    frame();
-    ~frame();
+    Frame();
+    ~Frame();
 
     void init(uint8_t h, uint8_t w);
 
-    /* Getters for st7735.h */
+    /* Getters for ST7735.h */
     uint16_t * get_buffer();
     bool* get_diff();
     uint8_t get_width();

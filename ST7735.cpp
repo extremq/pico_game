@@ -2,12 +2,12 @@
 // Created by god on 30.10.2022.
 //
 
-#include "st7735.h"
+#include "ST7735.h"
 
 /*
  * General init function
  */
-void st7735::init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res, uint8_t spi_port) {
+void ST7735::init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res, uint8_t spi_port) {
     this->screen_frame.init(h, w);
     this->cs = cs;
     this->dc = dc;
@@ -21,7 +21,7 @@ void st7735::init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uin
     this->load_frame();
 }
 
-void st7735::init_pins() {
+void ST7735::init_pins() {
     spi_init(this->spi_port == 0 ? spi0 : spi1, 20 * 1000 * 1000); // Set freq
 
     gpio_init(this->sda);
@@ -50,23 +50,23 @@ void st7735::init_pins() {
  * THIS DEPENDS ON LCD. PLEASE CHANGE
  * IF YOU WANT TO ADAPT IT TO YOUR LCD
  */
-void st7735::init_lcd() {
+void ST7735::init_lcd() {
     uint8_t buf[16];
     this->write_cmd(ST77XX_SWRESET); // Software reset
     sleep_us(50);
     this->write_cmd(ST77XX_SLPOUT); // Out of sleep mode
     sleep_us(500);
 
-    this->write_cmd(ST7735_FRMCTR1); // frame rate control
+    this->write_cmd(ST7735_FRMCTR1); // Frame rate control
     buf[0] = 0X01;
     buf[1] = 0X2C;
     buf[2] = 0X2D;
     this->write_data(buf, 3);
 
-    this->write_cmd(ST7735_FRMCTR2); // frame rate control
+    this->write_cmd(ST7735_FRMCTR2); // Frame rate control
     this->write_data(buf, 3);
 
-    this->write_cmd(ST7735_FRMCTR3); // frame rate control
+    this->write_cmd(ST7735_FRMCTR3); // Frame rate control
     this->write_data(buf, 3);
     sleep_us(10);
 
@@ -176,19 +176,19 @@ void st7735::init_lcd() {
 }
 
 /* Helper functions */
-void st7735::set_cs(bool value) {
+void ST7735::set_cs(bool value) {
     asm volatile("nop \n nop \n nop");
     gpio_put(this->cs, value);
     asm volatile("nop \n nop \n nop");
 }
 
-void st7735::set_dc(bool value) {
+void ST7735::set_dc(bool value) {
     asm volatile("nop \n nop \n nop");
     gpio_put(this->dc, value);
     asm volatile("nop \n nop \n nop");
 }
 
-void st7735::set_res(bool value) {
+void ST7735::set_res(bool value) {
     asm volatile("nop \n nop \n nop");
     gpio_put(this->res, value);
     asm volatile("nop \n nop \n nop");
@@ -198,14 +198,14 @@ void st7735::set_res(bool value) {
  * CS is low when we send data
  * DC selects either data or cmd
  */
-void st7735::write_cmd(uint8_t cmd) {
+void ST7735::write_cmd(uint8_t cmd) {
     this->set_dc(false);
     this->set_cs(false);
     this->write_spi(cmd);
     this->set_cs(true);
 }
 
-void st7735::write_data(uint8_t* data, uint8_t len) {
+void ST7735::write_data(uint8_t* data, uint8_t len) {
     this->set_dc(true);
     this->set_cs(false);
     this->write_spi_n(data, len);
@@ -213,16 +213,16 @@ void st7735::write_data(uint8_t* data, uint8_t len) {
 }
 
 /* SPI writing helper function */
-inline void st7735::write_spi(uint8_t data) {
+inline void ST7735::write_spi(uint8_t data) {
     spi_write_blocking(this->spi_port == 0 ? spi0 : spi1, &data, 1);
 }
 
-inline void st7735::write_spi_n(uint8_t* data, uint16_t n) {
+inline void ST7735::write_spi_n(uint8_t* data, uint16_t n) {
     spi_write_blocking(this->spi_port == 0 ? spi0 : spi1, data, n);
 }
 
 /* Resetting function, as per datasheet */
-void st7735::reset() {
+void ST7735::reset() {
     this->set_res(true);
     sleep_ms(10);
     this->set_res(false);
@@ -242,7 +242,7 @@ void st7735::reset() {
  * https://en.wikipedia.org/wiki/Bit_blit
  * Credits: https://github.com/bablokb/pico-st7735/
 */
-void st7735::set_addr_window(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
+void ST7735::set_addr_window(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
     uint8_t buf[4];
     this->write_cmd(ST77XX_CASET); // Set column range
     buf[0] = X_START;
@@ -261,7 +261,7 @@ void st7735::set_addr_window(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
     this->write_cmd(ST77XX_RAMWR);
 }
 
-void st7735::load_frame() {
+void ST7735::load_frame() {
     // Commit changes to diff and buffers
     this->screen_frame.compute_diff();
 
@@ -289,7 +289,7 @@ void st7735::load_frame() {
     }
 }
 
-st7735::st7735() {
+ST7735::ST7735() {
     this->height = 0;
     this->width = 0;
     this->cs = 0;

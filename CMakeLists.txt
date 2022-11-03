@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(PROJ_NAME shobi)
 
 pico_sdk_init()
-add_executable(${PROJ_NAME} main.cpp st7735.cpp st7735.h frame.cpp frame.h )
+add_executable(${PROJ_NAME} main.cpp ST7735.cpp ST7735.h Frame.cpp Frame.h)
 
 pico_enable_stdio_usb(${PROJ_NAME} 1)
 pico_enable_stdio_uart(${PROJ_NAME} 0)

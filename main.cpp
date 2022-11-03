@@ -2,7 +2,7 @@
 
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
-#include "st7735.h"
+#include "ST7735.h"
 
 /* Pins on PICO */
 constexpr uint8_t TFT_RES = 20;
@@ -26,7 +26,7 @@ int main() {
     adc_gpio_init(26);
     adc_gpio_init(27);
 
-    st7735 display;
+    ST7735 display;
     display.init(HEIGHT, WIDTH, TFT_CS, TFT_DC, TFT_SDA, TFT_SCL, TFT_RES, 0);
     const uint16_t adc_max = 4095;
 
