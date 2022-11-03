@@ -18,14 +18,7 @@ uint16_t sprite[4] = {0xffff, 0xffff, 0xffff, 0xffff};
 int main() {
     stdio_init_all();
 
-    const uint LED_PIN = PICO_DEFAULT_LED_PIN;
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
-    gpio_put(LED_PIN, true);
-
-
     GameEngine::get()->init(HEIGHT, WIDTH, TFT_CS, TFT_DC, TFT_SDA, TFT_SCL, TFT_RES, 0, 26, 27);
-
 
     uint8_t xx = 0;
     while(1) {

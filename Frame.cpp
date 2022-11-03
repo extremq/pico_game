@@ -21,7 +21,7 @@ uint8_t Frame::get_height() {
     return this->_h;
 }
 
-void Frame::init(uint8_t h, uint8_t w) {
+void Frame::init_frame(uint8_t h, uint8_t w) {
     this->_h = h;
     this->_w = w;
     this->_buffer = new uint16_t [w * h];
@@ -189,7 +189,7 @@ void Frame::fill_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) 
     }
 }
 
-void Frame::draw_sprite(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t *sprite) {
+void Frame::draw_sprite(uint16_t col, uint16_t row, uint16_t w, uint16_t h, const uint16_t *sprite) {
     // Validity checks
     if (col > this->_w || row > this->_h) return;
 

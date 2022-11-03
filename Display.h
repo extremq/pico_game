@@ -1,18 +1,55 @@
 //
-// Created by god on 03.11.2022.
+// Created by god on 30.10.2022.
 //
 
-#ifndef _DISPLAY_H
-#define _DISPLAY_H
+#ifndef _ST7735_H
+#define _ST7735_H
 
-#include "ST7735.h"
+#include <cstdint>
+#include "hardware/spi.h"
+#include "pico/stdlib.h"
+#include "Frame.h"
+#include "ST7735_defines.h"
 
-class Display {
+/*
+ * Display.h contains all that's needed for displaying the game.
+ * It is an extension of a frame. The frame only contains buffers
+ * and matrix operations on that buffer, while Display.h takes care
+ * of communicating with the ST7735 Controller
+ */
+
+class Display : public Frame {
 private:
     static Display* _instance;
-    Display() = default;
 
-    ST7735 _display;
+    uint8_t _spi_port;
+    uint8_t _cs, _dc, _sda, _scl, _res; /* Pins on PCB */
+
+    void init_pins(); /* Init functions */
+    void init_lcd();
+
+    void set_cs(bool value); /* Setters */
+    void set_dc(bool value);
+    void set_res(bool value);
+
+    void write_cmd(uint8_t cmd); /* Write abstracts */
+    void write_data(uint8_t* data, uint8_t len);
+
+    void write_spi(uint8_t data); /* Spi writing */
+    void write_spi_n(uint8_t* data, uint16_t n);
+
+    void set_addr_window(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
+    void reset();
+
+    Display() {
+        this->_cs = 0;
+        this->_dc = 0;
+        this->_res = 0;
+        this->_spi_port = 0;
+        this->_sda = 0;
+        this->_scl = 0;
+    }
+
 public:
     static Display* get() {
         if (_instance == nullptr) {
@@ -21,36 +58,9 @@ public:
         return _instance;
     }
 
-    // Init the display
-    inline void init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res, uint8_t spi_port) {
-        this->_display.init(h, w, cs, dc, sda, scl, res, spi_port);
-    }
-
-    // Use some features of the Controller
-    inline void draw_rect(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t color) {
-        this->_display.draw_rect(col, row, w, h, color);
-    }
-
-    inline void fill_rect(uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color) {
-        this->_display.fill_rect(x, y, w, h, color);
-    }
-
-    inline void line_horiz(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
-        this->_display.line_horiz(col, row, l, color);
-    }
-
-    inline void line_verti(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
-        this->_display.line_verti(col, row, l, color);
-    }
-
-    inline void draw_sprite(uint16_t col, uint16_t row, uint16_t w, uint16_t h, uint16_t* sprite) {
-        this->_display.draw_sprite(col, row, w, h, sprite);
-    }
-
-    inline void load_frame() {
-        this->_display.load_frame();
-    }
+    void init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res, uint8_t spi_port);
+    void load_frame();
 };
 
 
-#endif //_DISPLAY_H
+#endif //_ST7735_H
