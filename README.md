@@ -3,3 +3,8 @@ This game is using a [ST7735 128x128](https://www.optimusdigital.ro/en/lcds/3552
 as its display and is controlled by a generic joystick.
 
 Work in progress.
+
+TODO
+- Debug mode
+- Event starts and finishes
+- Time and physics time
