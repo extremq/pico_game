@@ -9,6 +9,7 @@
 #include "Joystick.h"
 #include "Display.h"
 #include "Sprite.h"
+#include <iostream>
 
 extern uint16_t test_sprite[4];
 
@@ -23,6 +24,7 @@ public:
         this->_x = 0;
         this->_y = 0;
         this->sprite.set_buffer(2, 2, test_sprite);
+        this->set_layer(0);
     }
 
     void on_frame_update() override {

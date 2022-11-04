@@ -17,6 +17,7 @@ constexpr uint8_t HEIGHT = 128;
 
 int main() {
     stdio_init_all();
+    sleep_ms(500);
 
     GameEngine::get()->init(HEIGHT, WIDTH, TFT_CS, TFT_DC,
                             TFT_SDA, TFT_SCL, TFT_RES, 0, 26, 27);

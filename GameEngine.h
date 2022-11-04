@@ -11,6 +11,12 @@
 #include "Display.h"
 #include "Joystick.h"
 
+struct cmp {
+    bool operator() (const Drawable* a, const Drawable* b) const {
+        return a->get_layer() < b->get_layer();
+    }
+};
+
 // Singleton based GameEngine
 class GameEngine {
 private:
@@ -21,7 +27,7 @@ private:
     std::vector<Event*> _event_list;
 
     // Set of Drawable pointers based on layer
-    std::set<Drawable*> _drawable_list;
+    std::set<Drawable*, cmp> _drawable_list;
 public:
     // Return singleton instance
     static GameEngine* get() {

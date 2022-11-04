@@ -3,12 +3,13 @@
 //
 
 #include "GameEngine.h"
+#include <iostream>
 
 GameEngine* GameEngine::_instance = nullptr;
 
 // Add event in vector of events
 void GameEngine::register_event(Event* e) {
-    this->_event_list.emplace_back(e);
+    this->_event_list.push_back(e);
 }
 
 // Init all the needed modules.
@@ -29,7 +30,9 @@ void GameEngine::start_game() {
         }
 
         // Take care of drawables (this starts with the lowest layer)
+        std::cout << "Layers:\n";
         for (auto d : this->_drawable_list) {
+            std::cout << d->get_layer() << '\n';
             d->on_frame_update();
         }
 
@@ -39,7 +42,7 @@ void GameEngine::start_game() {
     }
 }
 
-// Add drawable in priority queue of drawables
-void GameEngine::register_drawable(Drawable *d) {
+// Add drawable in set of drawables
+void GameEngine::register_drawable(Drawable* d) {
     this->_drawable_list.insert(d);
 }
