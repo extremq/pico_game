@@ -8,6 +8,6 @@ void Drawable::set_layer(uint16_t layer) {
     this->_layer = layer;
 }
 
-uint16_t Drawable::get_layer(uint16_t layer) {
+uint16_t Drawable::get_layer() {
     return this->_layer;
 }

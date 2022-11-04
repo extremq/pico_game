@@ -19,13 +19,27 @@ void GameEngine::init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda,
 }
 
 void GameEngine::start_game() {
-    while(true) {
+    bool running = true;
+    while(running) {
         uint64_t start_frame = time_us_64();
-        for(auto e : this->_event_list) {
+
+        // Take care of basic events
+        for (auto e : this->_event_list) {
             e->on_frame_update();
         }
+
+        // Take care of drawables (this starts with the lowest layer)
+        for (auto d : this->_drawable_list) {
+            d->on_frame_update();
+        }
+
         Display::get()->load_frame();
         uint64_t diff = time_us_64() - start_frame;
         sleep_us(16000 - diff);
     }
+}
+
+// Add drawable in priority queue of drawables
+void GameEngine::register_drawable(Drawable *d) {
+    this->_drawable_list.insert(d);
 }

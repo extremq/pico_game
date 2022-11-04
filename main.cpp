@@ -1,8 +1,9 @@
 #include <iostream>
 
 #include "pico/stdlib.h"
-#include "test.h"
 #include "GameEngine.h"
+#include "testPlayer.h"
+#include "Background.h"
 
 /* Pins on PICO */
 constexpr uint8_t TFT_RES = 20;
@@ -17,8 +18,11 @@ constexpr uint8_t HEIGHT = 128;
 int main() {
     stdio_init_all();
 
-    GameEngine::get()->init(HEIGHT, WIDTH, TFT_CS, TFT_DC, TFT_SDA, TFT_SCL, TFT_RES, 0, 26, 27);
-    test player;
-    GameEngine::get()->register_event(&player);
+    GameEngine::get()->init(HEIGHT, WIDTH, TFT_CS, TFT_DC,
+                            TFT_SDA, TFT_SCL, TFT_RES, 0, 26, 27);
+    testPlayer player;
+    Background background;
+    GameEngine::get()->register_drawable(&player);
+    GameEngine::get()->register_drawable(&background);
     GameEngine::get()->start_game();
 }
