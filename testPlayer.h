@@ -34,8 +34,8 @@ public:
     }
 
     void on_frame_update() override {
-        int8_t x_direction = joystick->get_x_direction();
-        int8_t y_direction = joystick->get_y_direction();
+        double x_direction = joystick->get_x_direction_precise();
+        double y_direction = joystick->get_y_direction_precise();
 
         this->_x += x_direction * 40 * time->get_delta_physics_time();
         if (_x >= this->_w) _x = this->_w - 1;

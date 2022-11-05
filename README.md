@@ -7,4 +7,5 @@ Work in progress.
 TODO
 - [ ] Debug mode
 - [ ] Event starts and finishes
+- [x] Joystick precision direction
 - [x] Time and physics time
