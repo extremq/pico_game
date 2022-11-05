@@ -5,6 +5,6 @@ as its display and is controlled by a generic joystick.
 Work in progress.
 
 TODO
-- Debug mode
-- Event starts and finishes
-- Time and physics time
+- [ ] Debug mode
+- [ ] Event starts and finishes
+- [x] Time and physics time
