@@ -22,3 +22,19 @@ uint16_t Joystick::get_y() {
     adc_select_input(1);
     return adc_read();
 }
+
+int8_t Joystick::get_x_direction() {
+    adc_select_input(0);
+    uint16_t raw_x = adc_read();
+    if (raw_x < max_value / 2 - 100) return -1;
+    if (raw_x < max_value / 2 + 100) return 0;
+    return 1;
+}
+
+int8_t Joystick::get_y_direction() {
+    adc_select_input(1);
+    uint16_t raw_y = adc_read();
+    if (raw_y < max_value / 2 - 100) return -1;
+    if (raw_y < max_value / 2 + 100) return 0;
+    return 1;
+}

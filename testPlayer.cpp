@@ -4,4 +4,4 @@
 
 #include "testPlayer.h"
 
-uint16_t test_sprite[4] = {0xE987,0xE987,0xE987,0xE987};
+uint16_t test_sprite[4] = {0xffff,0xffff,0xffff,0xffff};

@@ -30,6 +30,10 @@ public:
         return this->max_value;
     }
 
+    // Returns 1, 0 or -1 depending on direction on that axis
+    int8_t get_y_direction ();
+    int8_t get_x_direction ();
+
     void init(uint8_t xpin, uint8_t ypin);
 
 };

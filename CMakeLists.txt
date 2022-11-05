@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(PROJ_NAME shobi)
 
 pico_sdk_init()
-add_executable(${PROJ_NAME} main.cpp Display.cpp Display.h Frame.cpp Frame.h GameEngine.cpp GameEngine.h Event.cpp Event.h Drawable.cpp Drawable.h Display.cpp Display.h Joystick.cpp Joystick.h ST7735_defines.h Sprite.cpp Sprite.h Background.cpp Background.h testPlayer.cpp testPlayer.h)
+add_executable(${PROJ_NAME} main.cpp Display.cpp Display.h Frame.cpp Frame.h GameEngine.cpp GameEngine.h Event.cpp Event.h Drawable.cpp Drawable.h Display.cpp Display.h Joystick.cpp Joystick.h ST7735_defines.h Sprite.cpp Sprite.h Background.cpp Background.h testPlayer.cpp testPlayer.h Time.cpp Time.h)
 
 pico_enable_stdio_usb(${PROJ_NAME} 1)
 pico_enable_stdio_uart(${PROJ_NAME} 0)

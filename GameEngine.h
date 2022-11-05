@@ -10,6 +10,7 @@
 #include "Drawable.h"
 #include "Display.h"
 #include "Joystick.h"
+#include "Time.h"
 
 struct cmp {
     bool operator() (const Drawable* a, const Drawable* b) const {
@@ -22,6 +23,10 @@ class GameEngine {
 private:
     static GameEngine* _instance;
     GameEngine() = default;
+
+    Time* _time = Time::get();
+    Display* _display = Display::get();
+    Joystick* _joystick = Joystick::get();
 
     // Array of events.
     std::vector<Event*> _event_list;
