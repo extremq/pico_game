@@ -41,7 +41,8 @@ void GameEngine::start_game() {
 
         this->_display->load_frame();
         uint64_t diff = time_us_64() - start_frame;
-        sleep_us(16000 - diff);
+        if (diff < 16000)
+            sleep_us(16000 - diff);
     }
 }
 

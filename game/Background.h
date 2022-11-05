@@ -5,8 +5,8 @@
 #ifndef _BACKGROUND_H
 #define _BACKGROUND_H
 
-#include "Drawable.h"
-#include "Display.h"
+#include "engine/Drawable.h"
+#include "engine/Display.h"
 
 class Background : public Drawable {
 private:

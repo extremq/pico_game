@@ -32,7 +32,7 @@ private:
     std::vector<Event*> _event_list;
 
     // Set of Drawable pointers based on layer
-    std::set<Drawable*, cmp> _drawable_list;
+    std::multiset<Drawable*, cmp> _drawable_list;
 public:
     // Return singleton instance
     static GameEngine* get() {

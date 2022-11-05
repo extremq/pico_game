@@ -5,11 +5,11 @@
 #ifndef PICO_ST7735_TESTPLAYER_H
 #define PICO_ST7735_TESTPLAYER_H
 
-#include "Drawable.h"
-#include "Joystick.h"
-#include "Display.h"
-#include "Sprite.h"
-#include "Time.h"
+#include "engine/Drawable.h"
+#include "engine/Joystick.h"
+#include "engine/Display.h"
+#include "engine/Sprite.h"
+#include "engine/Time.h"
 #include <iostream>
 
 extern uint16_t test_sprite[4];
@@ -34,8 +34,8 @@ public:
     }
 
     void on_frame_update() override {
-        double x_direction = joystick->get_x_direction_precise();
-        double y_direction = joystick->get_y_direction_precise();
+        int8_t x_direction = joystick->get_x_direction();
+        int8_t y_direction = joystick->get_y_direction();
 
         this->_x += x_direction * 40 * time->get_delta_physics_time();
         if (_x >= this->_w) _x = this->_w - 1;
