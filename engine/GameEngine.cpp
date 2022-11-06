@@ -35,7 +35,6 @@ void GameEngine::start_engine() {
         }
 
         // Take care of drawables (this starts with the lowest layer)
-        std::cout << "Layers:\n";
         for (auto it = this->_drawable_list.begin(); it != this->_drawable_list.end(); ++it) {
             // Check if object's end time is lower than current time
             if ((*it)->get_end_time_raw() <= start_frame) {

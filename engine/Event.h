@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+// The basic building block
 class Event {
 private:
     // In microseconds

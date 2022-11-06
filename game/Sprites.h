@@ -7,6 +7,6 @@
 
 #include <cstdint>
 
-extern uint16_t test_sprite[4];
+extern uint16_t test_sprite[16];
 
 #endif //_SPRITES_H

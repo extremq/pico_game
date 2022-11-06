@@ -7,6 +7,7 @@
 
 #include "engine/Drawable.h"
 #include "engine/Display.h"
+#include "Layers.h"
 
 class Background : public Drawable {
 private:
@@ -16,7 +17,7 @@ private:
     Display* display = Display::get();
 public:
     void on_register() override {
-        this->set_layer(1);
+        this->set_layer(BG_LAYER);
         this->disp_height = display->get_height();
         this->disp_width = display->get_width();
     }
