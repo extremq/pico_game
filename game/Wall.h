@@ -14,7 +14,11 @@ private:
 
     Display* display = Display::get();
 public:
-    Wall() {
+    void set_color(uint16_t color) {
+        this->bg_color = color;
+    }
+
+    void on_register() override {
         this->set_layer(2);
     }
     void on_frame_update() override {

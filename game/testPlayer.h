@@ -10,7 +10,8 @@
 #include "engine/Display.h"
 #include "engine/Sprite.h"
 #include "engine/Time.h"
-#include <iostream>
+#include "game/Layers.h"
+#include "game/Sprites.h"
 
 extern uint16_t test_sprite[4];
 
@@ -23,7 +24,7 @@ private:
     Time* time = Time::get();
     Sprite sprite;
 public:
-    testPlayer() {
+    void on_register() override {
         this->_w = display->get_width();
         this->_h = display->get_height();
         this->_x = this->_w / 2;

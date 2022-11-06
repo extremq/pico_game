@@ -45,7 +45,7 @@ public:
     void register_drawable(Drawable* d);
     void init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res,
               uint8_t spi_port, uint8_t xpin, uint8_t ypin);
-    void start_game();
+    void start_engine();
 };
 
 

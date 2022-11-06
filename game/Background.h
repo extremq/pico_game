@@ -15,7 +15,7 @@ private:
 
     Display* display = Display::get();
 public:
-    Background() {
+    void on_register() override {
         this->set_layer(1);
         this->disp_height = display->get_height();
         this->disp_width = display->get_width();

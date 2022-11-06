@@ -22,11 +22,13 @@ int main() {
 
     GameEngine::get()->init(HEIGHT, WIDTH, TFT_CS, TFT_DC,
                             TFT_SDA, TFT_SCL, TFT_RES, 0, 26, 27);
-    testPlayer player;
-    Background background;
-    Wall wall;
-    GameEngine::get()->register_drawable(&wall);
-    GameEngine::get()->register_drawable(&player);
-    GameEngine::get()->register_drawable(&background);
-    GameEngine::get()->start_game();
+
+    testPlayer* player = new testPlayer;
+    Background* background = new Background;
+    Wall* wall = new Wall;
+    GameEngine::get()->register_drawable(wall);
+    wall->set_end_time(wall->get_start_time() + 3);
+    GameEngine::get()->register_drawable(player);
+    GameEngine::get()->register_drawable(background);
+    GameEngine::get()->start_engine();
 }

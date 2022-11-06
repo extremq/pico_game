@@ -5,18 +5,35 @@
 #ifndef _EVENT_H
 #define _EVENT_H
 
-
 #include <cstdint>
 
 class Event {
 private:
-    uint64_t _start_time = 0;
-    uint64_t _end_time = 0;
+    // In microseconds
+    uint64_t _start_time = 0x0000000000000000; // Microsecond 0
+    uint64_t _end_time   = 0xffffffffffffffff; // Year ~6 million after microsecond 0
 public:
-    uint64_t get_start_time();
-    uint64_t get_end_time();
+    // Raw returns in microseconds
+    // Otherwise return double in seconds.
+    uint64_t get_start_time_raw();
+    uint64_t get_end_time_raw();
+    double get_start_time();
+    double get_end_time();
+    void set_start_time_raw(uint64_t time);
+    void set_end_time_raw(uint64_t time);
+    void set_start_time(double time);
+    void set_end_time(double time);
 
+    // Called each frame
     virtual void on_frame_update() {};
+
+    // Called when registered by the engine
+    // PLEASE use this instead of a constructor
+    // To make sure the start time is correct
+    virtual void on_register() {};
+
+    // Called when discarded by the game engine
+    virtual void on_discard() {};
 };
 
 

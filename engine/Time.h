@@ -15,8 +15,8 @@ private:
     // In seconds
     double _game_time = 0;
     double _delta_time = 0;
-    double _delta_physics_time = 0.0;
     double _physics_time = 0.0;
+    double _delta_physics_time = 0.0;
     double _physics_timescale = 1.0;
 
     Time() = default;

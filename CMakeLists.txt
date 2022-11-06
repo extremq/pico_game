@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(PROJ_NAME shobi)
 
 pico_sdk_init()
-add_executable(${PROJ_NAME} main.cpp engine/Display.cpp engine/Display.h engine/Frame.cpp engine/Frame.h engine/GameEngine.cpp engine/GameEngine.h engine/Event.cpp engine/Event.h engine/Drawable.cpp engine/Drawable.h engine/Display.cpp engine/Display.h engine/Joystick.cpp engine/Joystick.h engine/ST7735_defines.h engine/Sprite.cpp engine/Sprite.h game/Background.cpp game/Background.h game/testPlayer.cpp game/testPlayer.h engine/Time.cpp engine/Time.h game/Wall.cpp game/Wall.h)
+add_executable(${PROJ_NAME} main.cpp engine/Display.cpp engine/Display.h engine/Frame.cpp engine/Frame.h engine/GameEngine.cpp engine/GameEngine.h engine/Event.cpp engine/Event.h engine/Drawable.cpp engine/Drawable.h engine/Display.cpp engine/Display.h engine/Joystick.cpp engine/Joystick.h engine/ST7735_defines.h engine/Sprite.cpp engine/Sprite.h game/Background.cpp game/Background.h game/testPlayer.cpp game/testPlayer.h engine/Time.cpp engine/Time.h game/Wall.cpp game/Wall.h game/Layers.h game/Sprites.h engine/Collision.cpp engine/Collision.h game/Sprites.cpp)
 
 pico_enable_stdio_usb(${PROJ_NAME} 1)
 pico_enable_stdio_uart(${PROJ_NAME} 0)

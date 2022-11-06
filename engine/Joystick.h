@@ -16,7 +16,6 @@ private:
     const uint16_t mid_point = 4095 / 2;
     const double mid_point_precise = max_value / 2.0;
 public:
-
     uint16_t get_x();
     uint16_t get_y();
 
@@ -43,6 +42,5 @@ public:
     void init(uint8_t xpin, uint8_t ypin);
 
 };
-
 
 #endif //_JOYSTICK_H
