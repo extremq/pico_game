@@ -55,19 +55,43 @@ void GameEngine::start_engine() {
 }
 
 // Add drawable in set of drawables and set start time
-void GameEngine::register_drawable(Drawable* d) {
+uint64_t GameEngine::register_drawable(Drawable* d) {
     this->_drawable_list.insert(d);
 
     // Init time and call register function
+    d->set_id(this->_id_cnt);
     d->set_start_time_raw(time_us_64());
     d->on_register();
+
+    return this->_id_cnt;
 }
 
 // Add event in vector of events and set start time
-void GameEngine::register_event(Event* e) {
+uint64_t GameEngine::register_event(Event* e) {
     this->_event_list.push_back(e);
 
     // Init time and call register function
+    e->set_id(this->_id_cnt++);
     e->set_start_time_raw(time_us_64());
     e->on_register();
+
+    return this->_id_cnt;
+}
+
+void GameEngine::discard_event(uint64_t id) {
+    for (auto it = this->_event_list.begin(); it != this->_event_list.end(); ++it) {
+        if ((*it)->get_id() == id) {
+            this->_event_list.erase(it);
+            return;
+        }
+    }
+}
+
+void GameEngine::discard_drawable(uint64_t id) {
+    for (auto it = this->_drawable_list.begin(); it != this->_drawable_list.end(); ++it) {
+        if ((*it)->get_id() == id) {
+            this->_drawable_list.erase(it);
+            return;
+        }
+    }
 }

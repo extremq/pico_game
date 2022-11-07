@@ -47,23 +47,16 @@ public:
         int8_t y_direction = joystick->get_y_direction();
 
         double new_x, new_y; // New coordinates
-        new_x = this->_x + x_direction * 40 * time->get_delta_time();
-        if (new_x >= this->_w) new_x = this->_w - 1;
+        new_x = this->_x + x_direction * 60 * time->get_delta_time();
+        if (new_x > this->_w - this->sprite.get_width()) new_x = this->_w - this->sprite.get_width();
         if (new_x < 0) new_x = 0;
-        new_y = this->_y + y_direction * 40 * time->get_delta_time();
-        if (new_y >= this->_h) new_y = this->_h - 1;
+        new_y = this->_y + y_direction * 60 * time->get_delta_time();
+        if (new_y > this->_h - this->sprite.get_height()) new_y = this->_h - this->sprite.get_height();
         if (new_y < 0) new_y = 0;
 
-//        std::cout << _x << ' ' << _y << ',' << new_x << ' ' << new_y << '.' << '\n';
-//        std::cout << collision->is_colliding_rect_rect(new_x, new_y, this->sprite.get_height(), this->sprite.get_width(),
-//                                                       20, 20, 6, 6) << '\n';
-        std::pair<double, double> pos =
-                collision->solve_collision_rect_rect(new_x, new_y, this->sprite.get_height(), this->sprite.get_width(),
-                                                     20, 20, 20, 20);
-
-        pos = collision->solve_collision_rect_rect(pos.first, pos.second, this->sprite.get_height(), this->sprite.get_width(),
-                                                   20, 25, 7, 60);
-
+        std::pair<double, double> pos = collision->solve_all_collisions(new_x, new_y,
+                                                                        this->sprite.get_height(), this->sprite.get_width(),
+                                                                        10.0);
         this->_x = pos.first;
         this->_y = pos.second;
 

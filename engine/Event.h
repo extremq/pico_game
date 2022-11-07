@@ -11,6 +11,7 @@
 class Event {
 private:
     // In microseconds
+    uint64_t _id = 0;
     uint64_t _start_time = 0x0000000000000000; // Microsecond 0
     uint64_t _end_time   = 0xffffffffffffffff; // Year ~6 million after microsecond 0
 public:
@@ -24,6 +25,8 @@ public:
     void set_end_time_raw(uint64_t time);
     void set_start_time(double time);
     void set_end_time(double time);
+    void set_id(uint64_t);
+    uint64_t get_id();
 
     // Called each frame
     virtual void on_frame_update() {};

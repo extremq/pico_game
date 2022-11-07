@@ -35,3 +35,11 @@ void Event::set_start_time(double time) {
 void Event::set_end_time(double time) {
     this->_end_time = time * 1000000.0;
 }
+
+void Event::set_id(uint64_t id) {
+    this->_id = id;
+}
+
+uint64_t Event::get_id() {
+    return this->_id;
+}

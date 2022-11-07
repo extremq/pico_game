@@ -10,7 +10,8 @@ Collision* Collision::_instance = nullptr;
 std::pair<double, double>
 Collision::solve_collision_rect_rect(double x0, double y0, uint16_t h0, uint16_t w0,
                                      double x1, double y1, uint16_t h1, uint16_t w1) {
-    // Where should rect 1 (x0, y0, h0, w0) be placed in order to clamp the intersection?
+    // TODO repair sliding
+    // Where should Rect 1 (x0, y0, h0, w0) be placed in order to clamp the intersection?
     std::pair<double, double> pos(x0, y0);
 
     // Get right corners
@@ -38,12 +39,13 @@ Collision::solve_collision_rect_rect(double x0, double y0, uint16_t h0, uint16_t
                 y0 -= y0_s - y1;
             }
         }
-        else if (y0_s < y1_s) {
+        else if (y0_s <= y1_s) {
             // Between up side and down side
             x0 -= x0_s - x1;
         }
         else {
             // First rectangle is on the left side but below second rectangle
+            std::cout << x0_s << ' ' << x1 << ' ' << y1_s << ' ' << y0 << '\n';
             if (x0_s - x1 < y1_s - y0) {
                 // If moving the rectangle to the left is less than moving below
                 x0 -= x0_s - x1;
@@ -53,13 +55,13 @@ Collision::solve_collision_rect_rect(double x0, double y0, uint16_t h0, uint16_t
             }
         }
     }
-    else if (x0_s < x1_s) {
+    else if (x0_s <= x1_s) {
         // First rectangle is between the sides
         if (y0 < y1) {
             // And above
             y0 -= y0_s - y1;
         }
-        else if (y0_s < y1_s) {
+        else if (y0_s <= y1_s) {
             // Or between (inside completely)
             double min_x, min_y;
             if (x0_s - x1 < x1_s - x0) {
@@ -109,7 +111,7 @@ Collision::solve_collision_rect_rect(double x0, double y0, uint16_t h0, uint16_t
         }
         else {
             // First rectangle is on the right side but below second rectangle
-            if (x1_s - x0 < y1_s - y0) {
+            if (x1_s - x0 <= y1_s - y0) {
                 // If moving the rectangle to the right is less than moving below
                 x0 += x1_s - x0;
             }
@@ -136,10 +138,6 @@ Collision::is_colliding_rect_rect(double x0, double y0, uint16_t h0, uint16_t w0
     double y0_s = y0 + h0;
     double x1_s = x1 + w1;
     double y1_s = y1 + h1;
-    std::cout << '(' << x0 << ',' << y0 << ')'
-            << '(' << x0_s << ',' << y0_s << ')' << '\n'
-            << '(' << x1 << ',' << y1 << ')'
-            << '(' << x1_s << ',' << y1_s << ')' << '\n';
 
     // Rectangles are separated on x
     if (x0 > x1_s || x1 > x0_s) return false;
@@ -148,4 +146,17 @@ Collision::is_colliding_rect_rect(double x0, double y0, uint16_t h0, uint16_t w0
     if (y0_s < y1 || y1_s < y0) return false;
 
     return true;
+}
+
+std::pair<double, double>
+Collision::solve_all_collisions(double x, double y, uint16_t h, uint16_t w, double max_radius_check) {
+    std::pair<double, double> pos(x, y);
+
+    for (auto rect : this->_collidable_list) {
+        // TODO use max_radius_check
+        pos = this->solve_collision_rect_rect(pos.first, pos.second, h, w,
+                                              rect.x, rect.y, rect.h, rect.w);
+    }
+
+    return pos;
 }

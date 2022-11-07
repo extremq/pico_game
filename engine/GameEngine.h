@@ -23,6 +23,7 @@ class GameEngine {
 private:
     static GameEngine* _instance;
     GameEngine() = default;
+    uint64_t _id_cnt = 0; // Used for assigning a unique id to events and drawables
 
     Time* _time = Time::get();
     Display* _display = Display::get();
@@ -41,8 +42,10 @@ public:
         }
         return _instance;
     }
-    void register_event(Event* e);
-    void register_drawable(Drawable* d);
+    uint64_t register_event(Event* e);
+    uint64_t register_drawable(Drawable* d);
+    void discard_event(uint64_t id);
+    void discard_drawable(uint64_t id);
     void init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res,
               uint8_t spi_port, uint8_t xpin, uint8_t ypin);
     void start_engine();
