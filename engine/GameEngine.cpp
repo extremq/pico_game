@@ -78,7 +78,8 @@ uint64_t GameEngine::register_event(Event* e) {
     return this->_id_cnt;
 }
 
-void GameEngine::discard_event(uint64_t id) {
+void GameEngine::discard_event(Event* e) {
+    uint64_t id = e->get_id();
     for (auto it = this->_event_list.begin(); it != this->_event_list.end(); ++it) {
         if ((*it)->get_id() == id) {
             this->_event_list.erase(it);
@@ -87,7 +88,8 @@ void GameEngine::discard_event(uint64_t id) {
     }
 }
 
-void GameEngine::discard_drawable(uint64_t id) {
+void GameEngine::discard_drawable(Drawable* d) {
+    uint64_t id = d->get_id();
     for (auto it = this->_drawable_list.begin(); it != this->_drawable_list.end(); ++it) {
         if ((*it)->get_id() == id) {
             this->_drawable_list.erase(it);

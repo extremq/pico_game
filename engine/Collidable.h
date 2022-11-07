@@ -7,15 +7,33 @@
 
 #include "Drawable.h"
 
+// Want to have collidables that aren't physical
+enum TypeOfCollidable {
+    COLLISION, INTERSECTION
+};
+
 // This object has rect describers and a layer
 // This engine only supports rectangle collisions
 // Extend it if you'd like!
 class Collidable : public Drawable {
 private:
     uint64_t _collision_id;
+    TypeOfCollidable _type = COLLISION; // default
     double _x, _y;
     uint16_t _h, _w;
 public:
+    // Function to be called when intersected by another object
+    // This will be called when other objects call collision function checks
+    virtual void on_intersect(Collidable* collided) {}
+
+    TypeOfCollidable get_type() {
+        return this->_type;
+    }
+
+    void set_type(TypeOfCollidable type) {
+        this->_type = type;
+    }
+
     uint64_t get_collision_id() {
         return this->_collision_id;
     }

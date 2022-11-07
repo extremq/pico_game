@@ -7,12 +7,15 @@
 
 Collision* Collision::_instance = nullptr;
 
-std::pair<double, double>
-Collision::solve_collision_rect_rect(double x0, double y0, uint16_t h0, uint16_t w0,
-                                     double x1, double y1, uint16_t h1, uint16_t w1) {
-    // TODO repair sliding
+
+void Collision::solve_collision_rect_rect(Collidable* rect1,
+                                          Collidable* rect2) {
+    double x0 = rect1->get_x(), y0 = rect1->get_y();
+    uint16_t h0 = rect1->get_height(), w0 = rect1->get_width();
+    double x1 = rect2->get_x(), y1 = rect2->get_y();
+    uint16_t h1 = rect2->get_height(), w1 = rect2->get_width();
+
     // Where should Rect 1 (x0, y0, h0, w0) be placed in order to clamp the intersection?
-    std::pair<double, double> pos(x0, y0);
 
     // Get right corners
     double x0_s = x0 + w0;
@@ -21,12 +24,21 @@ Collision::solve_collision_rect_rect(double x0, double y0, uint16_t h0, uint16_t
     double y1_s = y1 + h1;
 
     // Rectangles are separated on x
-    if (x0 > x1_s || x1 > x0_s) return pos;
+    if (x0 > x1_s || x1 > x0_s) return;
 
     // Rectangles are separated on y
-    if (y0_s < y1 || y1_s < y0) return pos;
+    if (y0_s < y1 || y1_s < y0) return;
 
     // This means we intersected.
+    // Update the collider
+    rect1->on_intersect(rect2);
+    rect2->on_intersect(rect1);
+
+    // Act as an intersection check if the second Collidable isn't based
+    // on physical collision
+    if (rect2->get_type() != COLLISION)
+        return;
+
     if (x0 < x1) {
         // First rectangle is on the left side
         if (y0 < y1) {
@@ -120,14 +132,18 @@ Collision::solve_collision_rect_rect(double x0, double y0, uint16_t h0, uint16_t
         }
     }
 
-    pos.first = x0;
-    pos.second = y0;
-    return pos;
+    rect1->set_x(x0);
+    rect1->set_y(y0);
 }
 
 bool
-Collision::is_intersecting_rect_rect(double x0, double y0, uint16_t h0, uint16_t w0,
-                                     double x1, double y1, uint16_t h1, uint16_t w1) {
+Collision::is_intersecting_rect_rect(Collidable* rect1,
+                                     Collidable* rect2) {
+    double x0 = rect1->get_x(), y0 = rect1->get_y();
+    uint16_t h0 = rect1->get_height(), w0 = rect1->get_width();
+    double x1 = rect2->get_x(), y1 = rect2->get_y();
+    uint16_t h1 = rect2->get_height(), w1 = rect2->get_width();
+
     if (h0 == 0 || w0 == 0 || h1 == 0 || w1 == 0)
         // Area 0
         return false;
@@ -144,18 +160,16 @@ Collision::is_intersecting_rect_rect(double x0, double y0, uint16_t h0, uint16_t
     // Rectangles are separated on y
     if (y0_s < y1 || y1_s < y0) return false;
 
+    // Update the colliders
+    rect1->on_intersect(rect2);
+    rect2->on_intersect(rect1);
     return true;
 }
 
-std::pair<double, double>
-Collision::solve_all_collisions(double x, double y, uint16_t h, uint16_t w, double max_radius_check) {
-    std::pair<double, double> pos(x, y);
 
-    for (auto rect : this->_collidable_list) {
+void Collision::solve_all_collisions(Collidable* rect, double max_radius_check) {
+    for (auto _rect : this->_collidable_list) {
         // TODO use max_radius_check
-        pos = this->solve_collision_rect_rect(pos.first, pos.second, h, w,
-                                              rect.x, rect.y, rect.h, rect.w);
+        this->solve_collision_rect_rect(rect, _rect);
     }
-
-    return pos;
 }

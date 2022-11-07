@@ -18,10 +18,8 @@
 #include "Wall.h"
 #include "Layers.h"
 
-class testPlayer : public Drawable {
+class testPlayer : public Collidable {
 private:
-    double _x, _y;
-    uint16_t _w, _h;
     double _last_inst_time;
     Joystick* joystick = Joystick::get();
     Display* display = Display::get();
@@ -33,35 +31,37 @@ public:
     void on_register() override {
         this->_last_inst_time = 0.0;
 
-        this->_w = display->get_width();
-        this->_h = display->get_height();
-        this->_x = this->_w / 2;
-        this->_y = this->_h / 2;
+        this->set_x(display->get_width() / 2);
+        this->set_y(display->get_height() / 2);
+        this->set_type(COLLISION);
 
         this->sprite.set_buffer(4, 4, test_sprite);
+        this->set_width(sprite.get_width());
+        this->set_height(sprite.get_height());
         this->set_layer(PLAYER_LAYER);
     }
 
     void on_frame_update() override {
+        double x = this->get_x(), y = this->get_y();
+        double new_x, new_y; // New coordinates
+        uint16_t h = this->get_height(), w = this->get_width();
+        uint16_t screen_h = display->get_height(), screen_w = display->get_width();
         int8_t x_direction = joystick->get_x_direction();
         int8_t y_direction = joystick->get_y_direction();
 
-        double new_x, new_y; // New coordinates
-        new_x = this->_x + x_direction * 60 * time->get_delta_time();
-        if (new_x > this->_w - this->sprite.get_width()) new_x = this->_w - this->sprite.get_width();
+        new_x = x + x_direction * 60 * time->get_delta_time();
+        if (new_x > screen_w - w) new_x = screen_w - w;
         if (new_x < 0) new_x = 0;
-        new_y = this->_y + y_direction * 60 * time->get_delta_time();
-        if (new_y > this->_h - this->sprite.get_height()) new_y = this->_h - this->sprite.get_height();
+        new_y = y + y_direction * 60 * time->get_delta_time();
+        if (new_y > screen_h - h) new_y = screen_h - h;
         if (new_y < 0) new_y = 0;
 
-        std::pair<double, double> pos = collision->solve_all_collisions(new_x, new_y,
-                                                                        this->sprite.get_height(), this->sprite.get_width(),
-                                                                        10.0);
-        this->_x = pos.first;
-        this->_y = pos.second;
+        this->set_x(new_x);
+        this->set_y(new_y);
+        collision->solve_all_collisions(this, 10.0);
 
-        display->draw_sprite((uint16_t) this->_x, (uint16_t) this->_y,
-                             this->sprite.get_height(), this->sprite.get_width(), this->sprite.get_buffer());
+        display->draw_sprite((uint16_t) this->get_x(), (uint16_t) this->get_y(),
+                             this->get_height(), this->get_width(), this->sprite.get_buffer());
     }
 };
 

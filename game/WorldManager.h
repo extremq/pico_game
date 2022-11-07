@@ -38,18 +38,24 @@ public:
 
         for (uint8_t i = 0; i < 2; ++i) {
             Room* room = new Room;
-            room->generate(1);
-            room->make_room();
+            room->generate(i);
+            room->init_room();
 
             this->_rooms.push_back(room);
         }
+
+        this->_rooms[0]->register_colliders();
+        this->_rooms[0]->register_drawables();
     }
 
     void on_frame_update() override{
         if (time->get_game_time() - this->_last_map > 5.0) {
             this->_last_map = 100000000;
-            this->_rooms[0]->register_colliders();
-            this->_rooms[0]->register_drawables();
+            Wall* wall = new Wall;
+            wall->set_config(16 * 5, 16 * 5, 20, 30, 0x1235);
+            this->_rooms[0]->add_collidable(wall);
+            this->_rooms[0]->register_for_drawing(wall);
+            this->_rooms[0]->register_for_colliding(wall);
         }
     }
 };

@@ -16,8 +16,11 @@
 
 class Room {
 private:
+    // The tile map is only used for initialization purposes
+    // You shouldn't try to update the map using the _tile_map
+    // and init map.
     uint8_t _tile_map[(128 / WALL_SIZE) * (128 / WALL_SIZE)] = {0};
-    std::vector<Collidable*> _walls;
+    std::vector<Collidable*> _collidables;
 
     RoomCreator* creator = RoomCreator::get();
     GameEngine* engine = GameEngine::get();
@@ -31,46 +34,68 @@ public:
         return this->_tile_map;
     }
 
+    void add_collidable(Collidable* collidable) {
+        // Don't assume we want to use it for colliding or drawing
+        // request the user to manually do so
+        this->_collidables.push_back(collidable);
+    }
+
+    void register_for_colliding(Collidable* collidable) {
+        collision->register_collidable(collidable);
+    }
+
+    void discard_for_colliding(Collidable* collidable) {
+        collision->discard_collidable(collidable);
+    }
+
+    void register_for_drawing(Collidable* collidable) {
+        engine->register_drawable(collidable);
+    }
+
+    void discard_for_drawing(Collidable* collidable) {
+        engine->discard_drawable(collidable);
+    }
+
+    // All register functions should be used sparingly.
     void register_drawables() {
-        // Register drawable walls
+        // Register the drawing
         // Used if you want to display the map
-        for (auto collideable : this->_walls) {
-            engine->register_drawable(collideable);
+        for (auto collidable : this->_collidables) {
+            engine->register_drawable(collidable);
         }
     }
 
     void discard_drawables() {
-        // Used for discarding the drawable walls
+        // Used for discarding the drawing
         // Useful if you dont want to render the map, but reuse it later
-        for (auto collideable : this->_walls) {
-            engine->discard_drawable(collideable->get_id());
+        for (auto collidable : this->_collidables) {
+            engine->discard_drawable(collidable);
         }
     }
 
     void reset_drawables_and_colliders() {
         // Used for completely emptying the map
-        for (auto collideable : this->_walls) {
-            engine->discard_drawable(collideable->get_id());
-            collision->discard_collidable(collideable->get_collision_id());
-            delete collideable;
+        for (auto collidable : this->_collidables) {
+            engine->discard_drawable(collidable);
+            collision->discard_collidable(collidable);
+            delete collidable;
         }
-        this->_walls.clear();
+        this->_collidables.clear();
     }
 
     void register_colliders() {
-        for (auto collideable : this->_walls) {
-            collision->register_collidable(collideable->get_x(), collideable->get_y(),
-                                           collideable->get_height(), collideable->get_width());
+        for (auto collidable : this->_collidables) {
+            collision->register_collidable(collidable);
         }
     }
 
     void discard_colliders() {
-        for (auto collideable : this->_walls) {
-            collision->discard_collidable(collideable->get_collision_id());
+        for (auto collidable : this->_collidables) {
+            collision->discard_collidable(collidable);
         }
     }
 
-    void make_room() {
+    void init_room() {
         // Remove drawables, free memory and clear the vector
         this->reset_drawables_and_colliders();
         // Create room
@@ -82,7 +107,7 @@ public:
                     wall->set_config(col * WALL_SIZE, row * WALL_SIZE, WALL_SIZE, WALL_SIZE, 0x0);
 
                     // Place in drawables in order to delete them later
-                    this->_walls.push_back(wall);
+                    this->_collidables.push_back(wall);
                 }
             }
         }

@@ -20,6 +20,7 @@ public:
         this->set_y(y);
         this->set_width(w);
         this->set_height(h);
+        this->set_type(COLLISION);
         this->_color = color;
     }
 
@@ -32,7 +33,7 @@ public:
     }
 
     void on_frame_update() override {
-        display->draw_rect((uint16_t) this->get_x(), (uint16_t) this->get_y(),
+        display->fill_rect((uint16_t) this->get_x(), (uint16_t) this->get_y(),
                            this->get_height(),this->get_width(), this->_color);
     }
 };
