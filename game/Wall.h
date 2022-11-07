@@ -5,23 +5,21 @@
 #ifndef _WALL_H
 #define _WALL_H
 
-#include "engine/Drawable.h"
+#include "engine/Collidable.h"
 #include "engine/Display.h"
 #include "Layers.h"
 
-class Wall : public Drawable {
+class Wall : public Collidable {
 private:
     uint16_t _color = 0x0;
-    uint16_t _x = 0, _y = 0;
-    uint16_t _w = 16, _h = 16;
 
     Display* display = Display::get();
 public:
     void set_config(uint16_t x, uint16_t y, uint16_t h, uint16_t w, uint16_t color) {
-        this->_x = x;
-        this->_y = y;
-        this->_h = h;
-        this->_w = w;
+        this->set_x(x);
+        this->set_y(y);
+        this->set_width(w);
+        this->set_height(h);
         this->_color = color;
     }
 
@@ -29,29 +27,13 @@ public:
         this->_color = color;
     }
 
-    void set_x(uint16_t x) {
-        this->_x = x;
-    }
-
-    void set_y(uint16_t y) {
-        this->_y = y;
-    }
-
-    void set_h(uint16_t h) {
-        this->_h = h;
-    }
-
-    void set_w(uint16_t w) {
-        this->_w = w;
-    }
-
     void on_register() override {
         this->set_layer(WALL_LAYER);
     }
 
     void on_frame_update() override {
-        display->draw_rect(this->_x, this->_y, this->_h,
-                           this->_w, this->_color);
+        display->draw_rect((uint16_t) this->get_x(), (uint16_t) this->get_y(),
+                           this->get_height(),this->get_width(), this->_color);
     }
 };
 

@@ -6,6 +6,9 @@ Work in progress.
 
 TODO
 - [ ] Debug mode
+- [ ] Collider
+- [ ] Invoke
+- [ ] Room managing
 - [x] Collisions
 - [x] Event starts and finishes
 - [x] Joystick precision direction

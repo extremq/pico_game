@@ -16,11 +16,11 @@ struct Rect {
 };
 
 // Class for collision-based computing
-// Mostly Rect on Rect collisions
+// Only supports Rect on Rect collisions.
 class Collision {
 private:
     static Collision* _instance;
-    uint64_t _id_cnt = 0; // Used for assigning a unique id to collidables
+    uint64_t _id_cnt = 1; // Used for assigning a unique id to collidables
     Collision() = default;
     std::vector<Rect> _collidable_list;
 public:
@@ -33,7 +33,7 @@ public:
 
     // Adds the collidable in struct and assigns it an id
     // Returns the id
-    uint64_t add_collidable(double x, double y, uint16_t h, uint16_t w) {
+    uint64_t register_collidable(double x, double y, uint16_t h, uint16_t w) {
         Rect rect = { this->_id_cnt, x, y, h, w};
         this->_collidable_list.push_back(rect);
 
@@ -41,7 +41,7 @@ public:
     }
 
     // Removes a collidable given an id
-    void remove_collidable(uint64_t id) {
+    void discard_collidable(uint64_t id) {
         for(auto it = this->_collidable_list.begin(); it != this->_collidable_list.end(); ++it)
             if ((*it).id == id)  {
                 this->_collidable_list.erase(it);
@@ -50,8 +50,8 @@ public:
     }
 
     // Returns whether there is an intersection between the two rects
-    bool is_colliding_rect_rect(double x0, double y0, uint16_t h0, uint16_t w0,
-                                double x1, double y1, uint16_t h1, uint16_t w1);
+    bool is_intersecting_rect_rect(double x0, double y0, uint16_t h0, uint16_t w0,
+                                   double x1, double y1, uint16_t h1, uint16_t w1);
 
     // I choose to represent positions using a double, double pair.
     // However, width and height will be an unsigned int.

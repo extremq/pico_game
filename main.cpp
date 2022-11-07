@@ -21,6 +21,6 @@ int main() {
     GameEngine::get()->init(HEIGHT, WIDTH, TFT_CS, TFT_DC,
                             TFT_SDA, TFT_SCL, TFT_RES, 0, 26, 27);
 
-    GameEngine::get()->register_drawable(WorldManager::get());
+    GameEngine::get()->register_event(WorldManager::get());
     GameEngine::get()->start_engine();
 }

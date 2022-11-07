@@ -45,7 +45,6 @@ Collision::solve_collision_rect_rect(double x0, double y0, uint16_t h0, uint16_t
         }
         else {
             // First rectangle is on the left side but below second rectangle
-            std::cout << x0_s << ' ' << x1 << ' ' << y1_s << ' ' << y0 << '\n';
             if (x0_s - x1 < y1_s - y0) {
                 // If moving the rectangle to the left is less than moving below
                 x0 -= x0_s - x1;
@@ -127,8 +126,8 @@ Collision::solve_collision_rect_rect(double x0, double y0, uint16_t h0, uint16_t
 }
 
 bool
-Collision::is_colliding_rect_rect(double x0, double y0, uint16_t h0, uint16_t w0,
-                                  double x1, double y1, uint16_t h1, uint16_t w1) {
+Collision::is_intersecting_rect_rect(double x0, double y0, uint16_t h0, uint16_t w0,
+                                     double x1, double y1, uint16_t h1, uint16_t w1) {
     if (h0 == 0 || w0 == 0 || h1 == 0 || w1 == 0)
         // Area 0
         return false;

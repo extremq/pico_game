@@ -59,7 +59,7 @@ uint64_t GameEngine::register_drawable(Drawable* d) {
     this->_drawable_list.insert(d);
 
     // Init time and call register function
-    d->set_id(this->_id_cnt);
+    d->set_id(this->_id_cnt++);
     d->set_start_time_raw(time_us_64());
     d->on_register();
 
