@@ -7,7 +7,8 @@
 
 #include <utility>
 #include <cstdint>
-#include <vector>
+#include <list>
+#include <queue>
 #include "Collidable.h"
 
 // Class for collision-based computing
@@ -18,7 +19,13 @@ private:
     static CollisionManager* _instance;
     uint64_t _id_cnt = 1; // Used for assigning a unique id to collidables
     CollisionManager() = default;
-    std::vector<Collidable*> _collidable_list;
+
+    // Same deal with GameEngine.h and its events system
+    // We cannot guarantee that a collidable doesn't remove other
+    // collidables in the on_intersect function.
+    std::queue<Collidable*> _collidables_to_be_added;
+    std::queue<Collidable*> _collidables_to_be_discarded;
+    std::list<Collidable*> _collidable_list;
 public:
     static CollisionManager* get() {
         if (_instance == nullptr) {
@@ -29,18 +36,12 @@ public:
 
     // Adds the collidable in struct and assigns it an id
     void register_collidable(Collidable* c) {
-        c->set_collision_id(this->_id_cnt++);
-        this->_collidable_list.push_back(c);
+        this->_collidables_to_be_added.push(c);
     }
 
     // Removes a collidable given an id
     void discard_collidable(Collidable* c) {
-        uint64_t id = c->get_collision_id();
-        for(auto it = this->_collidable_list.begin(); it != this->_collidable_list.end(); ++it)
-            if ((*it)->get_collision_id() == id)  {
-                this->_collidable_list.erase(it);
-                return;
-            }
+        this->_collidables_to_be_discarded.push(c);
     }
 
     // Check collisions against all collidables

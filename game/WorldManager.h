@@ -11,6 +11,7 @@
 #include "engine/GameEngine.h"
 #include "Room.h"
 #include "engine/Time.h"
+#include "engine/Invokable.h"
 
 class WorldManager : public Event {
 private:
@@ -48,13 +49,17 @@ public:
         this->_rooms[0]->register_drawables();
     }
 
+    void add_wall() {
+        Wall* wall = new Wall(16 * 5, 16 * 5, 20, 30, 0x1235);
+        this->_rooms[0]->add_collidable(wall);
+        this->_rooms[0]->register_for_drawing(wall);
+        this->_rooms[0]->register_for_colliding(wall);
+    }
+
     void on_frame_update() override{
         if (time->get_game_time() - this->_last_map > 5.0) {
             this->_last_map = 100000000;
-            Wall* wall = new Wall(16 * 5, 16 * 5, 20, 30, 0x1235);
-            this->_rooms[0]->add_collidable(wall);
-            this->_rooms[0]->register_for_drawing(wall);
-            this->_rooms[0]->register_for_colliding(wall);
+            new Invokable<WorldManager>(&WorldManager::add_wall, this, 5);
         }
     }
 };

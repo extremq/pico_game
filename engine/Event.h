@@ -18,7 +18,7 @@ public:
     // Raw returns in microseconds
     // Otherwise return double in seconds.
     uint64_t get_start_time_raw();
-    uint64_t get_end_time_raw();
+    uint64_t get_end_time_raw(int i);
     double get_start_time();
     double get_end_time();
     void set_start_time_raw(uint64_t time);

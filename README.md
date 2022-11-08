@@ -7,7 +7,7 @@ Work in progress.
 TODO
 - [ ] Debug mode
 - [ ] Collider
-- [ ] Invoke
+- [x] Invoke
 - [ ] Room managing
 - [x] Collisions
 - [x] Event starts and finishes

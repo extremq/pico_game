@@ -22,10 +22,39 @@ void GameEngine::start_engine() {
         // Update time class
         this->_time->update_time(start_frame);
 
+        // First, add the respective events and drawables
+        while(!this->_events_to_be_registered.empty()) {
+            Event* e = this->_events_to_be_registered.front();
+
+            // Place inside list
+            this->_event_list.push_back(e);
+
+            // Init time and call register function
+            e->set_id(this->_id_cnt++);
+            e->set_start_time_raw(start_frame);
+            e->on_register();
+
+            this->_events_to_be_registered.pop();
+        }
+
+        while(!this->_drawables_to_be_registered.empty()) {
+            Drawable* d = this->_drawables_to_be_registered.front();
+
+            // Place inside list
+            this->_drawable_list.insert(d);
+
+            // Init time and call register function
+            d->set_id(this->_id_cnt++);
+            d->set_start_time_raw(start_frame);
+            d->on_register();
+
+            this->_drawables_to_be_registered.pop();
+        }
+
         // Take care of basic events
         for (auto it = this->_event_list.begin(); it != this->_event_list.end(); ++it) {
             // Check if object's end time is lower than current time
-            if ((*it)->get_end_time_raw() <= start_frame) {
+            if ((*it)->get_end_time_raw(0) <= start_frame) {
                 (*it)->on_discard(); // Discard the object
                 delete (*it); // (*it) is a pointer to class
                 this->_event_list.erase(it--);
@@ -37,7 +66,7 @@ void GameEngine::start_engine() {
         // Take care of drawables (this starts with the lowest layer)
         for (auto it = this->_drawable_list.begin(); it != this->_drawable_list.end(); ++it) {
             // Check if object's end time is lower than current time
-            if ((*it)->get_end_time_raw() <= start_frame) {
+            if ((*it)->get_end_time_raw(0) <= start_frame) {
                 (*it)->on_discard(); // Discard the object
                 delete (*it); // (*it) is a pointer to class
                 this->_drawable_list.erase(it--);
@@ -46,6 +75,32 @@ void GameEngine::start_engine() {
                 (*it)->on_frame_update();
         }
 
+        // Then, remove the respective events and drawables
+        // Not that efficient, unfortunately
+        // A std::map might work better in such circumstances?
+        while(!this->_events_to_be_discarded.empty()) {
+            for (auto it = this->_event_list.begin(); it != this->_event_list.end(); ++it) {
+                if (this->_events_to_be_discarded.front() == *it) {
+                    (*it)->on_discard();
+                    delete (*it);
+                    this->_event_list.erase(it);
+                    break;
+                }
+            }
+            this->_events_to_be_discarded.pop();
+        }
+
+        while(!this->_drawables_to_be_discarded.empty()) {
+            for (auto it = this->_drawable_list.begin(); it != this->_drawable_list.end(); ++it) {
+                if (this->_drawables_to_be_discarded.front() == *it) {
+                    (*it)->on_discard();
+                    delete (*it);
+                    this->_drawable_list.erase(it);
+                    break;
+                }
+            }
+            this->_drawables_to_be_discarded.pop();
+        }
         // Send the frame to the display
         this->_display->load_frame();
         uint64_t diff = time_us_64() - start_frame;
@@ -54,46 +109,21 @@ void GameEngine::start_engine() {
     }
 }
 
-// Add drawable in set of drawables and set start time
-uint64_t GameEngine::register_drawable(Drawable* d) {
-    this->_drawable_list.insert(d);
-
-    // Init time and call register function
-    d->set_id(this->_id_cnt++);
-    d->set_start_time_raw(time_us_64());
-    d->on_register();
-
-    return this->_id_cnt;
+// Enqueue additions and deletions
+// NOTE: ALL OF THESE OPERATIONS TAKE EFFECT ON THE NEXT FRAME.
+// THIS IS TO ENSURE SAFETY OF OPERATIONS
+void GameEngine::register_event(Event* e) {
+    this->_events_to_be_registered.push(e);
 }
 
-// Add event in vector of events and set start time
-uint64_t GameEngine::register_event(Event* e) {
-    this->_event_list.push_back(e);
-
-    // Init time and call register function
-    e->set_id(this->_id_cnt++);
-    e->set_start_time_raw(time_us_64());
-    e->on_register();
-
-    return this->_id_cnt;
+void GameEngine::register_drawable(Drawable* d) {
+    this->_drawables_to_be_registered.push(d);
 }
 
 void GameEngine::discard_event(Event* e) {
-    uint64_t id = e->get_id();
-    for (auto it = this->_event_list.begin(); it != this->_event_list.end(); ++it) {
-        if ((*it)->get_id() == id) {
-            this->_event_list.erase(it);
-            return;
-        }
-    }
+    this->_events_to_be_discarded.push(e);
 }
 
 void GameEngine::discard_drawable(Drawable* d) {
-    uint64_t id = d->get_id();
-    for (auto it = this->_drawable_list.begin(); it != this->_drawable_list.end(); ++it) {
-        if ((*it)->get_id() == id) {
-            this->_drawable_list.erase(it);
-            return;
-        }
-    }
+    this->_drawables_to_be_discarded.push(d);
 }

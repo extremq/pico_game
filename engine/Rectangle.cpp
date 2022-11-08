@@ -15,7 +15,6 @@ void Rectangle::solve_collision(Collidable *collider) {
         case CIRCLE:
             break;
     }
-
 }
 
 double Rectangle::get_height() {

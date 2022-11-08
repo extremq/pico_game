@@ -8,7 +8,7 @@ uint64_t Event::get_start_time_raw() {
     return this->_start_time;
 }
 
-uint64_t Event::get_end_time_raw() {
+uint64_t Event::get_end_time_raw(int i) {
     return this->_end_time;
 }
 
