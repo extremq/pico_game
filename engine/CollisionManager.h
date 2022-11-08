@@ -11,18 +11,18 @@
 #include "Collidable.h"
 
 // Class for collision-based computing
-// Only supports Rect on Rect collisions.
-// Collision are lazily-checked by the user
-class Collision {
+// CollisionManager are lazily-checked by the user
+// using SolveAllCollisions on a Collidable
+class CollisionManager {
 private:
-    static Collision* _instance;
+    static CollisionManager* _instance;
     uint64_t _id_cnt = 1; // Used for assigning a unique id to collidables
-    Collision() = default;
+    CollisionManager() = default;
     std::vector<Collidable*> _collidable_list;
 public:
-    static Collision* get() {
+    static CollisionManager* get() {
         if (_instance == nullptr) {
-            _instance = new Collision;
+            _instance = new CollisionManager;
         }
         return _instance;
     }
@@ -42,16 +42,6 @@ public:
                 return;
             }
     }
-
-    // Returns whether there is an intersection between the two rects
-    bool is_intersecting_rect_rect(Collidable* rect1,
-                                   Collidable* rect2);
-
-    // I choose to represent positions using a double, double pair.
-    // However, width and height will be an unsigned int.
-    // I do not support rotations so there won't be any sub-pixel problems
-    void solve_collision_rect_rect(Collidable* rect1,
-                                   Collidable* rect2);
 
     // Check collisions against all collidables
     // Also enables a maximal radius check to skip far away colliders

@@ -21,7 +21,7 @@ private:
     uint8_t _h, _w;
     uint16_t* _buffer;
     bool* _diff;
-public:
+protected:
     Frame();
     ~Frame();
 
@@ -30,6 +30,7 @@ public:
     /* Getters for Display.h */
     uint16_t * get_buffer();
     bool* get_diff();
+public:
     uint8_t get_width();
     uint8_t get_height();
 

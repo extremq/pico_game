@@ -9,7 +9,7 @@
 #include "engine/Drawable.h"
 #include "RoomCreator.h"
 #include "engine/GameEngine.h"
-#include "engine/Collision.h"
+#include "engine/CollisionManager.h"
 #include "Wall.h"
 
 #define WALL_SIZE 8
@@ -20,11 +20,11 @@ private:
     // You shouldn't try to update the map using the _tile_map
     // and init map.
     uint8_t _tile_map[(128 / WALL_SIZE) * (128 / WALL_SIZE)] = {0};
-    std::vector<Collidable*> _collidables;
+    std::vector<Collidable*> _room_collidables;
 
     RoomCreator* creator = RoomCreator::get();
     GameEngine* engine = GameEngine::get();
-    Collision* collision = Collision::get();
+    CollisionManager* collision = CollisionManager::get();
 public:
     void generate(uint8_t seed) {
         creator->make_tile_map(this->_tile_map, (128 / WALL_SIZE), (128 / WALL_SIZE), seed);
@@ -37,7 +37,7 @@ public:
     void add_collidable(Collidable* collidable) {
         // Don't assume we want to use it for colliding or drawing
         // request the user to manually do so
-        this->_collidables.push_back(collidable);
+        this->_room_collidables.push_back(collidable);
     }
 
     void register_for_colliding(Collidable* collidable) {
@@ -60,7 +60,7 @@ public:
     void register_drawables() {
         // Register the drawing
         // Used if you want to display the map
-        for (auto collidable : this->_collidables) {
+        for (auto collidable : this->_room_collidables) {
             engine->register_drawable(collidable);
         }
     }
@@ -68,29 +68,29 @@ public:
     void discard_drawables() {
         // Used for discarding the drawing
         // Useful if you dont want to render the map, but reuse it later
-        for (auto collidable : this->_collidables) {
+        for (auto collidable : this->_room_collidables) {
             engine->discard_drawable(collidable);
         }
     }
 
     void reset_drawables_and_colliders() {
         // Used for completely emptying the map
-        for (auto collidable : this->_collidables) {
+        for (auto collidable : this->_room_collidables) {
             engine->discard_drawable(collidable);
             collision->discard_collidable(collidable);
             delete collidable;
         }
-        this->_collidables.clear();
+        this->_room_collidables.clear();
     }
 
     void register_colliders() {
-        for (auto collidable : this->_collidables) {
+        for (auto collidable : this->_room_collidables) {
             collision->register_collidable(collidable);
         }
     }
 
     void discard_colliders() {
-        for (auto collidable : this->_collidables) {
+        for (auto collidable : this->_room_collidables) {
             collision->discard_collidable(collidable);
         }
     }
@@ -103,11 +103,10 @@ public:
             for (uint8_t col = 0; col < (128 / WALL_SIZE); ++col) {
                 if (this->_tile_map[col + row * (128 / WALL_SIZE)] == WALL) {
                     // Create a new wall and configure it
-                    Wall* wall = new Wall;
-                    wall->set_config(col * WALL_SIZE, row * WALL_SIZE, WALL_SIZE, WALL_SIZE, 0x0);
+                    Wall* wall = new Wall(col * WALL_SIZE, row * WALL_SIZE, WALL_SIZE, WALL_SIZE, 0x0);
 
                     // Place in drawables in order to delete them later
-                    this->_collidables.push_back(wall);
+                    this->_room_collidables.push_back(wall);
                 }
             }
         }

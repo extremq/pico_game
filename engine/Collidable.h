@@ -12,6 +12,10 @@ enum TypeOfCollidable {
     COLLISION, INTERSECTION
 };
 
+enum ShapeOfCollidable {
+    RECTANGLE, CIRCLE
+};
+
 // This object has rect describers and a layer
 // This engine only supports rectangle collisions
 // Extend it if you'd like!
@@ -19,61 +23,39 @@ class Collidable : public Drawable {
 private:
     uint64_t _collision_id;
     TypeOfCollidable _type = COLLISION; // default
+protected:
     double _x, _y;
-    uint16_t _h, _w;
+    ShapeOfCollidable _shape;
 public:
     // Function to be called when intersected by another object
     // This will be called when other objects call collision function checks
-    virtual void on_intersect(Collidable* collided) {}
+    virtual void on_intersect(Collidable* collidable) {}
 
-    TypeOfCollidable get_type() {
-        return this->_type;
-    }
+    // This function is used for solving a collision
+    // based on subtype of collidable
+    // Ex -> a circle should use special functions, different from rect
+    virtual void solve_collision(Collidable* collidable) {}
 
-    void set_type(TypeOfCollidable type) {
-        this->_type = type;
-    }
+    TypeOfCollidable get_type();
+    // This should be public for dynamic purposing of a collidable
+    void set_type(TypeOfCollidable type);
 
-    uint64_t get_collision_id() {
-        return this->_collision_id;
-    }
+    // Only getter, can't change shape
+    ShapeOfCollidable get_shape();
 
-    void set_collision_id(uint64_t id) {
-        this->_collision_id = id;
-    }
+    uint64_t get_collision_id();
+    void set_collision_id(uint64_t id);
 
-    void set_x(double x) {
-        this->_x = x;
-    }
+    // X and Y appear everywhere
+    // They are also passed as protected
+    // Because of efficiency
+    void set_x(double x);
+    double get_x();
 
-    double get_x() {
-        return this->_x;
-    }
+    void set_xy(double x, double y);
 
-    void set_y(double y) {
-        this->_y = y;
-    }
-
-    double get_y() {
-        return this->_y;
-    }
-
-
-    void set_height(uint16_t h) {
-        this->_h = h;
-    }
-
-    uint16_t get_height() {
-        return this->_h;
-    }
-
-    void set_width(uint16_t w) {
-        this->_w = w;
-    }
-
-    uint16_t get_width() {
-        return this->_w;
-    }
+    void set_y(double y);
+    double get_y();
 };
 
 
