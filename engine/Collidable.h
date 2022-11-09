@@ -5,6 +5,8 @@
 #ifndef _COLLIDABLE_H
 #define _COLLIDABLE_H
 
+#include <map>
+#include <list>
 #include "Drawable.h"
 
 // Want to have collidables that aren't physical
@@ -23,18 +25,32 @@ class Collidable : public Drawable {
 private:
     uint64_t _collision_id;
     TypeOfCollidable _type = COLLISION; // default
+    std::map<uint64_t, Collidable*> _colliders; // List of intersecting colliders
+    std::list<Collidable*> _current_colliders; // Queue of current frame colliders
 protected:
     double _x, _y;
     ShapeOfCollidable _shape;
 public:
     // Function to be called when intersected by another object
     // This will be called when other objects call collision function checks
-    virtual void on_intersect(Collidable* collidable) {}
+    virtual void on_start_intersect(Collidable* collidable) {}
+
+    // Called when the object stops intersecting with collidable
+    virtual void on_stop_intersect(Collidable* collidable) {}
 
     // This function is used for solving a collision
     // based on subtype of collidable
     // Ex -> a circle should use special functions, different from rect
     virtual void solve_collision(Collidable* collidable) {}
+
+    void add_collider_to_list(Collidable* collidable);
+    void remove_collider_from_list_and_notify(uint64_t id);
+    bool check_for_collider_in_list(Collidable* collidable);
+    void erase_colliders();
+
+    void add_collider_to_queue(Collidable* collidable);
+
+    void solve_collider_list();
 
     TypeOfCollidable get_type();
     // This should be public for dynamic purposing of a collidable

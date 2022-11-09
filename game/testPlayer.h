@@ -64,6 +64,13 @@ public:
         display->draw_sprite((uint16_t) this->get_x(), (uint16_t) this->get_y(),
                              (uint16_t) this->get_height(), (uint16_t) this->get_width(), this->sprite.get_buffer());
     }
+
+    void on_start_intersect(Collidable* collider) override {
+        std::cout << "Intersected with " << collider->get_collision_id() << '\n';
+    }
+    void on_stop_intersect(Collidable* collider) override {
+        std::cout << "Stopped intersecting with with " << collider->get_collision_id() << '\n';
+    }
 };
 
 

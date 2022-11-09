@@ -22,7 +22,7 @@ private:
 
     // Same deal with GameEngine.h and its events system
     // We cannot guarantee that a collidable doesn't remove other
-    // collidables in the on_intersect function.
+    // collidables in the on_start_intersect function.
     std::queue<Collidable*> _collidables_to_be_added;
     std::queue<Collidable*> _collidables_to_be_discarded;
     std::list<Collidable*> _collidable_list;
@@ -46,7 +46,7 @@ public:
 
     // Check collisions against all collidables
     // Also enables a maximal radius check to skip far away colliders
-    void solve_all_collisions(Collidable* rect,
+    void solve_all_collisions(Collidable* collidable,
                               double max_radius_check);
 };
 

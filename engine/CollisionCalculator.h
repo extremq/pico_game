@@ -36,8 +36,8 @@ namespace CollisionCalculator {
         if (y0_s < y1 || y1_s < y0) return false;
 
         // Update the colliders
-        rect1->on_intersect(rect2);
-        rect2->on_intersect(rect1);
+        rect1->add_collider_to_queue(rect2);
+//        rect2->add_collider_to_queue(rect1);
         return true;
     }
 
@@ -64,8 +64,8 @@ namespace CollisionCalculator {
 
         // This means we intersected.
         // Update the collider
-        rect1->on_intersect(rect2);
-        rect2->on_intersect(rect1);
+        rect1->add_collider_to_queue(rect2);
+//        rect2->add_collider_to_queue(rect1);
 
         // Act as an intersection check if the second Rectangle isn't based
         // on physical collision
