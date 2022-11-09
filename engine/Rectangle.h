@@ -23,7 +23,7 @@ public:
         this->_shape = RECTANGLE;
     }
 
-    void solve_collision(Collidable* collider) override;
+    bool solve_collision(Collidable* collider) override;
 
     double get_height();
     double get_width();

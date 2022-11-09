@@ -37,11 +37,11 @@ namespace CollisionCalculator {
 
         // Update the colliders
         rect1->add_collider_to_queue(rect2);
-//        rect2->add_collider_to_queue(rect1);
+        rect2->add_collider_to_queue(rect1);
         return true;
     }
 
-    static void solve_collision_rect_rect(Rectangle* rect1,
+    static bool solve_collision_rect_rect(Rectangle* rect1,
                                           Rectangle* rect2) {
         double x0 = rect1->get_x(), y0 = rect1->get_y();
         double h0 = rect1->get_height(), w0 = rect1->get_width();
@@ -57,20 +57,20 @@ namespace CollisionCalculator {
         double y1_s = y1 + h1;
 
         // Rectangles are separated on x
-        if (x0 > x1_s || x1 > x0_s) return;
+        if (x0 > x1_s || x1 > x0_s) return false;
 
         // Rectangles are separated on y
-        if (y0_s < y1 || y1_s < y0) return;
+        if (y0_s < y1 || y1_s < y0) return false;
 
         // This means we intersected.
         // Update the collider
         rect1->add_collider_to_queue(rect2);
-//        rect2->add_collider_to_queue(rect1);
+        rect2->add_collider_to_queue(rect1);
 
         // Act as an intersection check if the second Rectangle isn't based
         // on physical collision
         if (rect2->get_type() != COLLISION)
-            return;
+            return true;
 
         if (x0 < x1) {
             // First rectangle is on the left side
@@ -166,6 +166,8 @@ namespace CollisionCalculator {
         }
 
         rect1->set_xy(x0, y0);
+
+        return true;
     }
 }
 

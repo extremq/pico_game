@@ -41,6 +41,10 @@ void CollisionManager::solve_all_collisions(Collidable* collidable, double max_r
         // Don't check yourself
         if (_collidable->get_collision_id() != collidable->get_collision_id())
             collidable->solve_collision(_collidable);
+
+        // Solve the other collider's list
+        _collidable->solve_collider_list();
+
     }
     collidable->solve_collider_list();
 }

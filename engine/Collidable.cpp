@@ -82,6 +82,7 @@ void Collidable::erase_colliders() {
 void Collidable::solve_collider_list() {
     // All around complexity O(3 * nlogn)
 
+    // Copy the previous computed colliders
     std::set<uint64_t> all_ids;
     for (auto it : this->_colliders) {
         // Copy the collider ids: O(nlogn)
@@ -89,6 +90,7 @@ void Collidable::solve_collider_list() {
     }
 
     // Treat like a queue and empty out
+    // Add new colliders
     while (!this->_current_colliders.empty()) {
         Collidable* collidable = this->_current_colliders.front();
         this->_current_colliders.pop_front();

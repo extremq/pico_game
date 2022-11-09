@@ -41,7 +41,7 @@ public:
     // This function is used for solving a collision
     // based on subtype of collidable
     // Ex -> a circle should use special functions, different from rect
-    virtual void solve_collision(Collidable* collidable) {}
+    virtual bool solve_collision(Collidable* collidable) { return false; }
 
     void add_collider_to_list(Collidable* collidable);
     void remove_collider_from_list_and_notify(uint64_t id);

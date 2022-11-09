@@ -5,6 +5,7 @@
 #ifndef _WALL_H
 #define _WALL_H
 
+#include <iostream>
 #include "engine/Rectangle.h"
 #include "engine/Display.h"
 #include "Layers.h"
@@ -35,6 +36,13 @@ public:
     void on_frame_update() override {
         display->fill_rect((uint16_t) this->get_x(), (uint16_t) this->get_y(),
                            (uint16_t) this->get_height(),(uint16_t) this->get_width(), this->_color);
+    }
+
+    void on_start_intersect(Collidable* collidable) override {
+        std::cout << this->get_collision_id() << " wall has been touched\n";
+    }
+    void on_stop_intersect(Collidable* collidable) override {
+        std::cout << this->get_collision_id() << " wall has stopped being touched\n";
     }
 };
 

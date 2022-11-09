@@ -6,15 +6,15 @@
 #include "Rectangle.h"
 #include "CollisionCalculator.h"
 
-void Rectangle::solve_collision(Collidable *collider) {
+bool Rectangle::solve_collision(Collidable *collider) {
     // Check shape and solve
     switch (collider->get_shape()) {
         case RECTANGLE:
-            CollisionCalculator::solve_collision_rect_rect(this, (Rectangle*) collider);
-            break;
+            return CollisionCalculator::solve_collision_rect_rect(this, (Rectangle*) collider);
         case CIRCLE:
             break;
     }
+    return false;
 }
 
 double Rectangle::get_height() {
