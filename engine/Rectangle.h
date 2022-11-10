@@ -8,7 +8,7 @@
 #include "Collidable.h"
 
 class Rectangle : public Collidable {
-private:
+protected:
     double _width, _height;
 public:
     Rectangle() {

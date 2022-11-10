@@ -6,6 +6,9 @@
 #define _COLLISIONCALCULATOR_H
 
 #include "Rectangle.h"
+#include "Circle.h"
+#include <cmath>
+#include <iostream>
 
 /*
  * Header for all collision computations
@@ -41,6 +44,50 @@ namespace CollisionCalculator {
         return true;
     }
 
+    static double euclidian_distance(double x0, double y0,
+                                     double x1, double y1) {
+        return std::sqrt((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1));
+    }
+
+    static bool solve_collision_circle_circle(Circle* circle1,
+                                              Circle* circle2) {
+        double x0 = circle1->get_x(), y0 = circle1->get_y();
+        double r0 = circle1->get_radius();
+        double x1 = circle2->get_x(), y1 = circle2->get_y();
+        double r1 = circle2->get_radius();
+
+        double dist = euclidian_distance(x0, y0, x1, y1);
+
+        // Isn't intersecting
+        if (dist > r0 + r1) return false;
+
+        // Update the collider queues
+        circle1->add_collider_to_queue(circle2);
+        circle2->add_collider_to_queue(circle1);
+
+        // If the circles are on the same x
+        // This is to avoid division by 0
+        if (std::abs(x1 - x0) < 1e-5) {
+            y0 = y0 > y1 ? y1 + r0 + r1 : y1 - r0 + r1;
+            circle1->set_y(y0);
+        }
+        else {
+            // get the vector from the center of circle2 that points
+            // to center of circle1
+            // normalize it and multiply it by the sum of radii
+            double nx = (x1 - x0) / dist;
+            double ny = (y1 - y0) / dist;
+
+            x0 = x1 - (r0 + r1) * nx;
+            y0 = y1 - (r0 + r1) * ny;
+
+            // now just subtract from the first circle
+            circle1->set_xy(x0, y0);
+        }
+
+        return true;
+    }
+
     static bool solve_collision_rect_rect(Rectangle* rect1,
                                           Rectangle* rect2) {
         double x0 = rect1->get_x(), y0 = rect1->get_y();
@@ -63,7 +110,7 @@ namespace CollisionCalculator {
         if (y0_s < y1 || y1_s < y0) return false;
 
         // This means we intersected.
-        // Update the collider
+        // Update the collider queues
         rect1->add_collider_to_queue(rect2);
         rect2->add_collider_to_queue(rect1);
 

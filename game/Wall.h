@@ -16,7 +16,7 @@ private:
 
     Display* display = Display::get();
 public:
-    Wall(uint16_t x, uint16_t y, uint16_t h, uint16_t w, uint16_t color) {
+    Wall(double x, double y, double h, double w, double color) {
         this->set_x(x);
         this->set_y(y);
         this->set_width(w);
@@ -39,10 +39,10 @@ public:
     }
 
     void on_start_intersect(Collidable* collidable) override {
-        std::cout << this->get_collision_id() << " wall has been touched\n";
+        this->_color = 0xff00;
     }
     void on_stop_intersect(Collidable* collidable) override {
-        std::cout << this->get_collision_id() << " wall has stopped being touched\n";
+        this->_color = 0x0;
     }
 };
 
