@@ -8,24 +8,20 @@
 #include "Collidable.h"
 
 class Circle : public Collidable {
-protected:
-    double _radius;
 public:
+    float radius = 0;
     Circle() {
         this->_shape = CIRCLE;
     }
 
-    Circle(double x, double y, double radius) {
-        this->_x = x;
-        this->_y = y;
-        this->_radius = radius;
+    Circle(float x, float y, float radius) {
+        this->pos.x = x;
+        this->pos.y = y;
+        this->radius = radius;
+        this->_shape = CIRCLE;
     }
 
     bool solve_collision(Collidable* collider) override;
-
-    double get_radius();
-    void set_radius(double radius);
-
 };
 
 

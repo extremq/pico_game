@@ -16,11 +16,11 @@ private:
 
     Display* display = Display::get();
 public:
-    Wall(double x, double y, double h, double w, double color) {
-        this->set_x(x);
-        this->set_y(y);
-        this->set_width(w);
-        this->set_height(h);
+    Wall(float x, float y, float h, float w, uint16_t color) {
+        this->pos.x = x;
+        this->pos.y = y;
+        this->w = w;
+        this->h = h;
         this->set_type(COLLISION);
         this->_color = color;
     }
@@ -34,13 +34,14 @@ public:
     }
 
     void on_frame_update() override {
-        display->fill_rect((uint16_t) this->get_x(), (uint16_t) this->get_y(),
-                           (uint16_t) this->get_height(),(uint16_t) this->get_width(), this->_color);
+        display->draw_rect((uint16_t) this->pos.x, (uint16_t) this->pos.y,
+                           (uint16_t) this->h,(uint16_t) this->w, this->_color);
     }
 
     void on_start_intersect(Collidable* collidable) override {
         this->_color = 0xff00;
     }
+
     void on_stop_intersect(Collidable* collidable) override {
         this->_color = 0x0;
     }

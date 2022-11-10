@@ -7,7 +7,7 @@
 
 CollisionManager* CollisionManager::_instance = nullptr;
 
-void CollisionManager::solve_all_collisions(Collidable* collidable, double max_radius_check) {
+void CollisionManager::solve_all_collisions(Collidable* collidable, float max_radius_check=0.0) {
     // Commit collider changes - analogue to GameEngine.h
     while (!this->_collidables_to_be_added.empty()) {
         Collidable* c = this->_collidables_to_be_added.front();
@@ -39,8 +39,13 @@ void CollisionManager::solve_all_collisions(Collidable* collidable, double max_r
         // TODO use max_radius_check
         // Solves collision for collidable going through all collidables
         // Don't check yourself
-        if (_collidable->get_collision_id() != collidable->get_collision_id())
-            collidable->solve_collision(_collidable);
+        if (_collidable->get_collision_id() != collidable->get_collision_id()) {
+            if (collidable->solve_collision(_collidable)) {
+                // If collided, update the collidables' queues
+                collidable->add_collider_to_queue(_collidable);
+                _collidable->add_collider_to_queue(collidable);
+            }
+        }
 
         // Solve the other collider's list
         _collidable->solve_collider_list();

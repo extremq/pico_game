@@ -50,17 +50,25 @@ public:
         this->_rooms[0]->register_drawables();
     }
 
-    void add_wall() {
+    void add_circle() {
         Ball* circle = new Ball(70, 70, 10, 0x0);
         this->_rooms[0]->add_collidable(circle);
         this->_rooms[0]->register_for_drawing(circle);
         this->_rooms[0]->register_for_colliding(circle);
     }
+    void add_wall() {
+        Wall* wall = new Wall(40, 40, 30, 30, 0x0);
+        this->_rooms[0]->add_collidable(wall);
+        this->_rooms[0]->register_for_drawing(wall);
+        this->_rooms[0]->register_for_colliding(wall);
+    }
+
 
     void on_frame_update() override{
-        if (time->get_game_time() - this->_last_map > 2.0) {
+        if (time->get_game_time() - this->_last_map > 1) {
             this->_last_map = 100000000;
-            new Invokable<WorldManager>(&WorldManager::add_wall, this, 2);
+            new Invokable<WorldManager>(&WorldManager::add_circle, this, 2);
+            new Invokable<WorldManager>(&WorldManager::add_wall, this, 3);
         }
     }
 };

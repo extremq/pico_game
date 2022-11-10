@@ -9,17 +9,9 @@ bool Circle::solve_collision(Collidable *collider) {
     // Check shape and solve
     switch (collider->get_shape()) {
         case RECTANGLE:
-            break;
+            return CollisionCalculator::solve_collision_circle_rect(*this, *(Rectangle*) collider);
         case CIRCLE:
-            return CollisionCalculator::solve_collision_circle_circle(this, (Circle*) collider);
+            return CollisionCalculator::solve_collision_circle_circle(*this, *(Circle*) collider);
     }
     return false;
-}
-
-double Circle::get_radius() {
-    return this->_radius;
-}
-
-void Circle::set_radius(double radius) {
-    this->_radius = radius;
 }

@@ -15,204 +15,189 @@
  */
 
 namespace CollisionCalculator {
-    static bool is_intersecting_rect_rect(Rectangle* rect1,
-                                          Rectangle* rect2) {
-        double x0 = rect1->get_x(), y0 = rect1->get_y();
-        double h0 = rect1->get_height(), w0 = rect1->get_width();
-        double x1 = rect2->get_x(), y1 = rect2->get_y();
-        double h1 = rect2->get_height(), w1 = rect2->get_width();
-
-        if (h0 == 0 || w0 == 0 || h1 == 0 || w1 == 0)
-            // Area 0
-            return false;
-
+    static bool is_intersecting_rect_rect(Rectangle& rect1,
+                                          Rectangle& rect2) {
         // Get right corners
-        double x0_s = x0 + w0;
-        double y0_s = y0 + h0;
-        double x1_s = x1 + w1;
-        double y1_s = y1 + h1;
+        Vector corner1, corner2;
+        corner1.x = rect1.pos.x + rect1.w;
+        corner1.y = rect1.pos.y + rect1.h;
+        corner2.x = rect2.pos.x + rect2.w;
+        corner2.y = rect2.pos.y + rect2.h;
 
         // Rectangles are separated on x
-        if (x0 > x1_s || x1 > x0_s) return false;
+        if (rect1.pos.x > corner2.x || rect2.pos.x > corner1.x) return false;
 
         // Rectangles are separated on y
-        if (y0_s < y1 || y1_s < y0) return false;
+        if (corner1.y  < rect2.pos.y || corner2.y < rect1.pos.y) return false;
 
-        // Update the colliders
-        rect1->add_collider_to_queue(rect2);
-        rect2->add_collider_to_queue(rect1);
         return true;
     }
 
-    static double euclidian_distance(double x0, double y0,
-                                     double x1, double y1) {
-        return std::sqrt((x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1));
+    static float distance(const Vector& a, const Vector& b) {
+        return std::sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
     }
 
-    static bool solve_collision_circle_circle(Circle* circle1,
-                                              Circle* circle2) {
-        double x0 = circle1->get_x(), y0 = circle1->get_y();
-        double r0 = circle1->get_radius();
-        double x1 = circle2->get_x(), y1 = circle2->get_y();
-        double r1 = circle2->get_radius();
+    static bool solve_collision_circle_rect(Circle& circle,
+                                            Rectangle& rect) {
+        // Nearest point on rectangle
+        Vector nearest_point;
+        nearest_point.x = std::max(rect.pos.x, std::min(circle.pos.x, rect.pos.x + rect.w));
+        nearest_point.y = std::max(rect.pos.y, std::min(circle.pos.y, rect.pos.y + rect.h));
 
-        double dist = euclidian_distance(x0, y0, x1, y1);
+        // Ray to nearest point
+        Vector ray_to_nearest_point = nearest_point - circle.pos;
+
+        const float mag = ray_to_nearest_point.mag();
+        const float overlap = circle.radius - mag;
+
+        if (overlap < -1e-5) return false;
+
+        // Maybe intersection trigger
+        if (rect.get_type() != COLLISION)
+            return true;
+
+        // Resolution
+        circle.pos.x -= ray_to_nearest_point.x / mag * overlap;
+        circle.pos.y -= ray_to_nearest_point.y / mag * overlap;
+
+        return true;
+    }
+
+    static bool solve_collision_circle_circle(Circle& circle1,
+                                              Circle& circle2) {
+        float dist = CollisionCalculator::distance(circle1.pos, circle2.pos);
+
 
         // Isn't intersecting
-        if (dist > r0 + r1) return false;
+        if (dist > circle1.radius + circle2.radius) return false;
 
-        // Update the collider queues
-        circle1->add_collider_to_queue(circle2);
-        circle2->add_collider_to_queue(circle1);
+        // get the vector from the center of circle2 that points
+        // to center of circle1
+        // normalize it and multiply it by the sum of radii
+        Vector tg;
+        tg.x = (circle2.pos.x - circle1.pos.x) / dist;
+        tg.y = (circle2.pos.y - circle1.pos.y) / dist;
 
-        // If the circles are on the same x
-        // This is to avoid division by 0
-        if (std::abs(x1 - x0) < 1e-5) {
-            y0 = y0 > y1 ? y1 + r0 + r1 : y1 - r0 + r1;
-            circle1->set_y(y0);
-        }
-        else {
-            // get the vector from the center of circle2 that points
-            // to center of circle1
-            // normalize it and multiply it by the sum of radii
-            double nx = (x1 - x0) / dist;
-            double ny = (y1 - y0) / dist;
-
-            x0 = x1 - (r0 + r1) * nx;
-            y0 = y1 - (r0 + r1) * ny;
-
-            // now just subtract from the first circle
-            circle1->set_xy(x0, y0);
-        }
+        circle1.pos = circle2.pos - tg * (circle1.radius + circle2.radius);
 
         return true;
     }
 
-    static bool solve_collision_rect_rect(Rectangle* rect1,
-                                          Rectangle* rect2) {
-        double x0 = rect1->get_x(), y0 = rect1->get_y();
-        double h0 = rect1->get_height(), w0 = rect1->get_width();
-        double x1 = rect2->get_x(), y1 = rect2->get_y();
-        double h1 = rect2->get_height(), w1 = rect2->get_width();
-
-        // Where should Rect 1 (x0, y0, h0, w0) be placed in order to clamp the intersection?
-
+    static bool solve_collision_rect_rect(Rectangle& rect1,
+                                          Rectangle& rect2) {
+        // TODO use vectors and compute ACTUAL result
         // Get right corners
-        double x0_s = x0 + w0;
-        double y0_s = y0 + h0;
-        double x1_s = x1 + w1;
-        double y1_s = y1 + h1;
+        Vector corner1, corner2;
+        corner1.x = rect1.pos.x + rect1.w;
+        corner1.y = rect1.pos.y + rect1.h;
+        corner2.x = rect2.pos.x + rect2.w;
+        corner2.y = rect2.pos.y + rect2.h;
 
         // Rectangles are separated on x
-        if (x0 > x1_s || x1 > x0_s) return false;
+        if (rect1.pos.x > corner2.x || rect2.pos.x > corner1.x) return false;
 
         // Rectangles are separated on y
-        if (y0_s < y1 || y1_s < y0) return false;
+        if (corner1.y  < rect2.pos.y || corner2.y < rect1.pos.y) return false;
 
         // This means we intersected.
-        // Update the collider queues
-        rect1->add_collider_to_queue(rect2);
-        rect2->add_collider_to_queue(rect1);
 
         // Act as an intersection check if the second Rectangle isn't based
         // on physical collision
-        if (rect2->get_type() != COLLISION)
+        if (rect2.get_type() != COLLISION)
             return true;
 
-        if (x0 < x1) {
+        if (rect1.pos.x < rect2.pos.x) {
             // First rectangle is on the left side
-            if (y0 < y1) {
+            if (rect1.pos.y < rect2.pos.y) {
                 // First rectangle is on the left side and above second rectangle
-                if (x0_s - x1 < y0_s - y1) {
+                if (corner1.x - rect2.pos.x < corner1.y - rect2.pos.y) {
                     // If moving the rectangle to the left is less than moving above
-                    x0 -= x0_s - x1;
+                    rect1.pos.x -= corner1.x - rect2.pos.x;
                 }
                 else {
-                    y0 -= y0_s - y1;
+                    rect1.pos.y -= corner1.y - rect2.pos.y;
                 }
             }
-            else if (y0_s <= y1_s) {
+            else if (corner1.y <= corner2.y) {
                 // Between up side and down side
-                x0 -= x0_s - x1;
+                rect1.pos.x -= corner1.x - rect2.pos.x;
             }
             else {
                 // First rectangle is on the left side but below second rectangle
-                if (x0_s - x1 < y1_s - y0) {
+                if (corner1.x - rect2.pos.x < corner2.y - rect1.pos.y) {
                     // If moving the rectangle to the left is less than moving below
-                    x0 -= x0_s - x1;
+                    rect1.pos.x -= corner1.x - rect2.pos.x;
                 }
                 else {
-                    y0 += y1_s - y0;
+                    rect1.pos.y += corner2.y - rect1.pos.y;
                 }
             }
         }
-        else if (x0_s <= x1_s) {
+        else if (corner1.x <= corner2.x) {
             // First rectangle is between the sides
-            if (y0 < y1) {
+            if (rect1.pos.y < rect2.pos.y) {
                 // And above
-                y0 -= y0_s - y1;
+                rect1.pos.y -= corner1.y - rect2.pos.y;
             }
-            else if (y0_s <= y1_s) {
+            else if (corner1.y <= corner2.y) {
                 // Or between (inside completely)
-                double min_x, min_y;
-                if (x0_s - x1 < x1_s - x0) {
+                float min_x, min_y;
+                if (corner1.x - rect2.pos.x < corner2.x - rect1.pos.x) {
                     // If it's better to move the rectangle left than right
-                    min_x = -(x0_s - x1);
+                    min_x = -(corner1.x - rect2.pos.x);
                 }
                 else {
-                    min_x = x1_s - x0;
+                    min_x = corner2.x - rect1.pos.x;
                 }
 
-                if (y0_s - y1 < y1_s - y0) {
+                if (corner1.y - rect2.pos.y < corner2.y - rect1.pos.y) {
                     // If it's better to move the rectangle above than below
-                    min_y = -(y0_s - y1);
+                    min_y = -(corner1.y - rect2.pos.y);
                 }
                 else {
-                    min_y = y1_s - y0;
+                    min_y = corner2.y - rect1.pos.y;
                 }
 
                 if (min_x < min_y) {
                     // Move x rather than y
-                    x0 += min_x;
+                    rect1.pos.x += min_x;
                 }
                 else {
-                    y0 += min_y;
+                    rect1.pos.y += min_y;
                 }
             }
             else {
                 // Or below
-                y0 += y1_s - y0;
+                rect1.pos.y += corner2.y - rect1.pos.y;
             }
         }
         else {
             // First rectangle is on the right side
-            if (y0 < y1) {
+            if (rect1.pos.y < rect2.pos.y) {
                 // First rectangle is on the right side and above second rectangle
-                if (x1_s - x0 < y0_s - y1) {
+                if (corner2.x - rect1.pos.x < corner1.y - rect2.pos.y) {
                     // If moving the rectangle to the right is less than moving above
-                    x0 += x1_s - x0;
+                    rect1.pos.x += corner2.x - rect1.pos.x;
                 }
                 else {
-                    y0 -= y0_s - y1;
+                    rect1.pos.y -= corner1.y - rect2.pos.y;
                 }
             }
-            else if (y0_s < y1_s) {
+            else if (corner1.y < corner2.y) {
                 // Between up side and down side
-                x0 += x1_s - x0;
+                rect1.pos.x += corner2.x - rect1.pos.x;
             }
             else {
                 // First rectangle is on the right side but below second rectangle
-                if (x1_s - x0 <= y1_s - y0) {
+                if (corner2.x - rect1.pos.x <= corner2.y - rect1.pos.y) {
                     // If moving the rectangle to the right is less than moving below
-                    x0 += x1_s - x0;
+                    rect1.pos.x += corner2.x - rect1.pos.x;
                 }
                 else {
-                    y0 += y1_s - y0;
+                    rect1.pos.y += corner2.y - rect1.pos.y;
                 }
             }
         }
-
-        rect1->set_xy(x0, y0);
 
         return true;
     }

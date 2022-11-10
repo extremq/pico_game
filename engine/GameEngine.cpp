@@ -51,30 +51,6 @@ void GameEngine::start_engine() {
             this->_drawables_to_be_registered.pop();
         }
 
-        // Take care of basic events
-        for (auto it = this->_event_list.begin(); it != this->_event_list.end(); ++it) {
-            // Check if object's end time is lower than current time
-            if ((*it)->get_end_time_raw(0) <= start_frame) {
-                (*it)->on_discard(); // Discard the object
-                delete (*it); // (*it) is a pointer to class
-                this->_event_list.erase(it--);
-            }
-            else
-                (*it)->on_frame_update();
-        }
-
-        // Take care of drawables (this starts with the lowest layer)
-        for (auto it = this->_drawable_list.begin(); it != this->_drawable_list.end(); ++it) {
-            // Check if object's end time is lower than current time
-            if ((*it)->get_end_time_raw(0) <= start_frame) {
-                (*it)->on_discard(); // Discard the object
-                delete (*it); // (*it) is a pointer to class
-                this->_drawable_list.erase(it--);
-            }
-            else
-                (*it)->on_frame_update();
-        }
-
         // Then, remove the respective events and drawables
         // Not that efficient, unfortunately
         // A std::map might work better in such circumstances?
@@ -101,6 +77,31 @@ void GameEngine::start_engine() {
             }
             this->_drawables_to_be_discarded.pop();
         }
+
+        // Take care of basic events
+        for (auto it = this->_event_list.begin(); it != this->_event_list.end(); ++it) {
+            // Check if object's end time is lower than current time
+            if ((*it)->get_end_time_raw(0) <= start_frame) {
+                (*it)->on_discard(); // Discard the object
+                delete (*it); // (*it) is a pointer to class
+                this->_event_list.erase(it--);
+            }
+            else
+                (*it)->on_frame_update();
+        }
+
+        // Take care of drawables (this starts with the lowest layer)
+        for (auto it = this->_drawable_list.begin(); it != this->_drawable_list.end(); ++it) {
+            // Check if object's end time is lower than current time
+            if ((*it)->get_end_time_raw(0) <= start_frame) {
+                (*it)->on_discard(); // Discard the object
+                delete (*it); // (*it) is a pointer to class
+                this->_drawable_list.erase(it--);
+            }
+            else
+                (*it)->on_frame_update();
+        }
+
         // Send the frame to the display
         this->_display->load_frame();
         uint64_t diff = time_us_64() - start_frame;

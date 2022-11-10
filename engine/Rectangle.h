@@ -8,27 +8,21 @@
 #include "Collidable.h"
 
 class Rectangle : public Collidable {
-protected:
-    double _width, _height;
 public:
+    float w = 0, h = 0;
     Rectangle() {
         this->_shape = RECTANGLE;
     };
 
-    Rectangle(double x, double y, double width, double height) {
-        this->_x = x;
-        this->_y = y;
-        this->_height = height;
-        this->_width = width;
+    Rectangle(float x, float y, float width, float height) {
+        this->pos.x = x;
+        this->pos.y = y;
+        this->w = height;
+        this->h = width;
         this->_shape = RECTANGLE;
     }
 
     bool solve_collision(Collidable* collider) override;
-
-    double get_height();
-    double get_width();
-    void set_height(double h);
-    void set_width(double w);
 
 };
 

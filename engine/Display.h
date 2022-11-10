@@ -50,6 +50,10 @@ private:
         this->_scl = 0;
     }
 
+    // These should only be used by GameEngine
+    void init(uint8_t w, uint8_t h, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res, uint8_t spi_port);
+    void load_frame();
+
 public:
     static Display* get() {
         if (_instance == nullptr) {
@@ -58,8 +62,7 @@ public:
         return _instance;
     }
 
-    void init(uint8_t w, uint8_t h, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res, uint8_t spi_port);
-    void load_frame();
+    friend class GameEngine;
 };
 
 

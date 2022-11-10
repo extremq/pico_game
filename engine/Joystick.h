@@ -14,7 +14,10 @@ private:
     Joystick() = default;
     const uint16_t max_value = 4095;
     const uint16_t mid_point = 4095 / 2;
-    const double mid_point_precise = max_value / 2.0;
+    const float mid_point_precise = max_value / 2.0;
+
+    // Only GameEngine should invoke
+    void init(uint8_t xpin, uint8_t ypin);
 public:
     uint16_t get_x();
     uint16_t get_y();
@@ -39,8 +42,7 @@ public:
     double get_x_direction_precise();
     double get_y_direction_precise();
 
-    void init(uint8_t xpin, uint8_t ypin);
-
+    friend class GameEngine;
 };
 
 #endif //_JOYSTICK_H

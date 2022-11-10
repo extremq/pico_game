@@ -47,7 +47,7 @@ public:
     // Check collisions against all collidables
     // Also enables a maximal radius check to skip far away colliders
     void solve_all_collisions(Collidable* collidable,
-                              double max_radius_check);
+                              float max_radius_check);
 };
 
 

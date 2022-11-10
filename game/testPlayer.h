@@ -27,18 +27,18 @@ private:
     CollisionManager* collision = CollisionManager::get();
 public:
     void on_register() override {
-        this->set_x(display->get_width() / 2.0);
-        this->set_y(display->get_height() / 2.0);
+        this->pos.x = (display->get_width() / 2.0f);
+        this->pos.y = (display->get_height() / 2.0f);
         this->set_type(COLLISION);
 
-        this->set_radius(4);
+        this->radius = 4;
         this->set_layer(PLAYER_LAYER);
     }
 
     void on_frame_update() override {
-        double x = this->get_x(), y = this->get_y();
-        double new_x, new_y; // New coordinates
-        double r = this->get_radius();
+        float x = this->pos.x, y = this->pos.y;
+        float new_x, new_y; // New coordinates
+        float r = this->radius;
 
         uint16_t screen_h = display->get_height(), screen_w = display->get_width();
         int8_t x_direction = joystick->get_x_direction();
@@ -51,10 +51,11 @@ public:
         if (new_y > screen_h - r) new_y = screen_h - r;
         if (new_y < 0) new_y = 0;
 
-        this->set_xy(new_x, new_y);
+        this->pos.x = new_x;
+        this->pos.y = new_y;
         collision->solve_all_collisions(this, 10.0);
 
-        display->draw_circle(_x, _y, _radius, 0xffff);
+        display->draw_circle(this->pos.x, this->pos.y, this->radius, 0xffff);
     }
 
     void on_start_intersect(Collidable* collidable) override {
