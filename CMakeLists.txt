@@ -7,7 +7,39 @@ set(CMAKE_CXX_STANDARD 17)
 set(PROJ_NAME shobi)
 
 pico_sdk_init()
-add_executable(${PROJ_NAME} main.cpp engine/Display.cpp engine/Display.h engine/Frame.cpp engine/Frame.h engine/GameEngine.cpp engine/GameEngine.h engine/Event.cpp engine/Event.h engine/Drawable.cpp engine/Drawable.h engine/Display.cpp engine/Display.h engine/Joystick.cpp engine/Joystick.h engine/ST7735_defines.h engine/Sprite.cpp engine/Sprite.h game/Background.cpp game/Background.h game/testPlayer.cpp game/testPlayer.h engine/Time.cpp engine/Time.h game/Wall.cpp game/Wall.h game/Layers.h game/Sprites.h engine/CollisionManager.cpp engine/CollisionManager.h game/Sprites.cpp game/WorldManager.cpp game/WorldManager.h game/RoomCreator.cpp game/RoomCreator.h game/Room.cpp game/Room.h engine/Collidable.cpp engine/Collidable.h engine/Rectangle.cpp engine/Rectangle.h engine/CollisionCalculator.h engine/Invokable.cpp engine/Invokable.h engine/Invokable.cpp engine/Invokable.h engine/Circle.cpp engine/Circle.h game/Ball.cpp game/Ball.h engine/Vector.h)
+add_executable(${PROJ_NAME}
+        main.cpp
+        engine/Display.cpp
+        engine/Display.h
+        engine/Frame.cpp
+        engine/Frame.h
+        engine/GameEngine.cpp
+        engine/GameEngine.h
+        engine/Event.cpp
+        engine/Event.h
+        engine/Drawable.cpp
+        engine/Drawable.h
+        engine/Display.cpp
+        engine/Display.h
+        engine/Joystick.cpp
+        engine/Joystick.h
+        engine/ST7735_defines.h
+        engine/Sprite.cpp
+        engine/Sprite.h
+        engine/Time.cpp
+        engine/Time.h
+        engine/CollisionManager.cpp
+        engine/CollisionManager.h
+        engine/Collidable.cpp
+        engine/Collidable.h
+        engine/Rectangle.cpp
+        engine/Rectangle.h
+        engine/CollisionCalculator.h
+        engine/Invokable.h
+        engine/Circle.cpp
+        engine/Circle.h
+        engine/Vector.h
+        )
 
 pico_enable_stdio_usb(${PROJ_NAME} 1)
 pico_enable_stdio_uart(${PROJ_NAME} 0)
@@ -24,4 +56,5 @@ target_link_libraries(${PROJ_NAME}
 add_custom_command(TARGET
         ${PROJ_NAME} POST_BUILD
         COMMAND
-        sudo -S /bin/sh ${PROJECT_SOURCE_DIR}/deploy.sh ${PROJECT_SOURCE_DIR}/build/${PROJ_NAME}.uf2)
+        sudo -S /bin/sh ${PROJECT_SOURCE_DIR}/deploy.sh ${PROJECT_SOURCE_DIR}/build/${PROJ_NAME}.uf2
+        )

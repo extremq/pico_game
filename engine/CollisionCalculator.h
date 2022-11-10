@@ -67,6 +67,7 @@ namespace CollisionCalculator {
                                               Circle& circle2) {
         float dist = CollisionCalculator::distance(circle1.pos, circle2.pos);
 
+        // TODO Maybe make it stick better?
 
         // Isn't intersecting
         if (dist > circle1.radius + circle2.radius) return false;

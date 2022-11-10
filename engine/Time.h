@@ -13,15 +13,15 @@ private:
     static Time* _instance;
 
     // In seconds
-    double _game_time = 0;
-    double _delta_time = 0;
+    float _game_time = 0;
+    float _delta_time = 0;
 
     Time() = default;
 
     // Should only be accessible by GameEngine
     void update_time(uint64_t raw_time) {
         // Even if i cast to double, it should have enough accuracy.
-        double raw_time_seconds = raw_time / 1000000.0;
+        float raw_time_seconds = raw_time / 1000000.0;
         this->_delta_time = raw_time_seconds - this->_game_time;
         this->_game_time = raw_time_seconds;
     }
@@ -33,11 +33,11 @@ public:
         return _instance;
     }
 
-    double get_game_time() {
+    float get_game_time() {
         return this->_game_time;
     }
 
-    double get_delta_time() {
+    float get_delta_time() {
         return this->_delta_time;
     }
 

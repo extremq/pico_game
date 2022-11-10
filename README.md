@@ -5,10 +5,8 @@ as its display and is controlled by a generic joystick.
 Work in progress.
 
 TODO
-- [ ] Debug mode
-- [ ] Collider
+- [x] Collider (half done)
 - [x] Invoke
-- [ ] Room managing
 - [x] Collisions
 - [x] Event starts and finishes
 - [x] Joystick precision direction

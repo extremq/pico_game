@@ -15,9 +15,9 @@ class Invokable : public Event {
 private:
     void (T::* _func)() = nullptr;
     T* _ptr_T = nullptr;
-    double _delay;
+    float _delay;
 public:
-    Invokable(void (T::* func)(), T* ptr_T, double delay_seconds) {
+    Invokable(void (T::* func)(), T* ptr_T, float delay_seconds) {
         // Register the event
         // This will set the start_time
         // I do this because the object will be registered in the next frame
