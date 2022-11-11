@@ -47,7 +47,6 @@ private:
 protected:
     ShapeOfCollidable _shape;
 public:
-    Vector pos;
     // Function to be called when intersected by another object
     // This will be called when other objects call collision function checks
     virtual void on_start_intersect(Collidable* collidable) {}

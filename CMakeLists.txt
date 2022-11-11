@@ -39,7 +39,7 @@ add_executable(${PROJ_NAME}
         engine/Circle.cpp
         engine/Circle.h
         engine/Vector.h
-        )
+        game/test.cpp game/test.h game/Ball.h)
 
 pico_enable_stdio_usb(${PROJ_NAME} 1)
 pico_enable_stdio_uart(${PROJ_NAME} 0)

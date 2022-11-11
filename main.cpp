@@ -2,6 +2,7 @@
 
 #include "pico/stdlib.h"
 #include "engine/GameEngine.h"
+#include "game/test.h"
 
 /* Pins on PICO */
 constexpr uint8_t TFT_RES = 20;
@@ -18,7 +19,9 @@ int main() {
     sleep_ms(500);
 
     GameEngine::get()->init(HEIGHT, WIDTH, TFT_CS, TFT_DC,
-                            TFT_SDA, TFT_SCL, TFT_RES, 0, 26, 27);
+                            TFT_SDA, TFT_SCL, TFT_RES, 0, 26, 27,
+                            0x0);
 
+    test t;
     GameEngine::get()->start_engine();
 }

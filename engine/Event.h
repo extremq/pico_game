@@ -14,6 +14,7 @@ private:
     uint64_t _id = 1;
     uint64_t _start_time = 0x0000000000000000; // Microsecond 0
     uint64_t _end_time   = 0xffffffffffffffff; // Year ~6 million after microsecond 0
+    bool _discarded = true;
 
     void set_id(uint64_t);
 public:

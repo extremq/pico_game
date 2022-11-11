@@ -34,12 +34,12 @@ public:
     uint8_t get_width();
     uint8_t get_height();
 
-    void draw_rect(uint16_t col, uint16_t row, uint16_t h, uint16_t w, uint16_t color);
-    void fill_rect(uint16_t col, uint16_t row, uint16_t h, uint16_t w, uint16_t color);
-    void line_horiz(uint16_t col, uint16_t row, uint16_t l, uint16_t color);
-    void line_verti(uint16_t col, uint16_t row, uint16_t l, uint16_t color);
-    void draw_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color);
-    void fill_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color);
+    void draw_rect(uint16_t col, uint16_t row, int16_t h, int16_t w, uint16_t color);
+    void fill_rect(uint16_t col, uint16_t row, int16_t h, int16_t w, uint16_t color);
+    void line_horiz(uint16_t col, uint16_t row, int16_t l, uint16_t color);
+    void line_verti(uint16_t col, uint16_t row, int16_t l, uint16_t color);
+    void draw_circle(uint16_t col, uint16_t row, int16_t r, uint16_t color);
+    void fill_circle(uint16_t col, uint16_t row, int16_t r, uint16_t color);
     void draw_sprite(uint16_t col, uint16_t row, uint16_t h, uint16_t w, const uint16_t* sprite);
     void compute_diff();
 };

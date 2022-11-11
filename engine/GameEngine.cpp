@@ -9,7 +9,7 @@ GameEngine* GameEngine::_instance = nullptr;
 
 // Init all the needed modules.
 void GameEngine::init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res,
-                      uint8_t spi_port, uint8_t xpin, uint8_t ypin) {
+                      uint8_t spi_port, uint8_t xpin, uint8_t ypin, uint16_t bg_color) {
     this->_display->init(w, h, cs, dc, sda, scl, res, spi_port);
     this->_joystick->init(xpin, ypin);
 }
@@ -27,6 +27,7 @@ void GameEngine::start_engine() {
             Event* e = this->_events_to_be_registered.front();
 
             // Place inside list
+            e->_discarded = false;
             this->_event_list.push_back(e);
 
             // Init time and call register function
@@ -41,6 +42,7 @@ void GameEngine::start_engine() {
             Drawable* d = this->_drawables_to_be_registered.front();
 
             // Place inside list
+            d->_discarded = false;
             this->_drawable_list.insert(d);
 
             // Init time and call register function
@@ -57,7 +59,11 @@ void GameEngine::start_engine() {
         while(!this->_events_to_be_discarded.empty()) {
             for (auto it = this->_event_list.begin(); it != this->_event_list.end(); ++it) {
                 if (this->_events_to_be_discarded.front() == *it) {
-                    (*it)->on_discard();
+                    if (!(*it)->_discarded) {
+                        (*it)->on_discard();
+                    }
+                    (*it)->_discarded = true;
+
                     delete (*it);
                     this->_event_list.erase(it);
                     break;
@@ -69,7 +75,11 @@ void GameEngine::start_engine() {
         while(!this->_drawables_to_be_discarded.empty()) {
             for (auto it = this->_drawable_list.begin(); it != this->_drawable_list.end(); ++it) {
                 if (this->_drawables_to_be_discarded.front() == *it) {
-                    (*it)->on_discard();
+                    if (!(*it)->_discarded) {
+                        (*it)->on_discard();
+                    }
+                    (*it)->_discarded = true;
+
                     delete (*it);
                     this->_drawable_list.erase(it);
                     break;
@@ -79,27 +89,27 @@ void GameEngine::start_engine() {
         }
 
         // Take care of basic events
-        for (auto it = this->_event_list.begin(); it != this->_event_list.end(); ++it) {
+        for (auto & it : this->_event_list) {
             // Check if object's end time is lower than current time
-            if ((*it)->get_end_time_raw(0) <= start_frame) {
-                (*it)->on_discard(); // Discard the object
-                delete (*it); // (*it) is a pointer to class
-                this->_event_list.erase(it--);
+            if (it->get_end_time_raw(0) <= start_frame) {
+                it->on_discard();
+                it->_discarded = true;
+                this->_events_to_be_discarded.push(it);
             }
             else
-                (*it)->on_frame_update();
+                it->on_frame_update();
         }
 
         // Take care of drawables (this starts with the lowest layer)
-        for (auto it = this->_drawable_list.begin(); it != this->_drawable_list.end(); ++it) {
+        for (auto it : this->_drawable_list) {
             // Check if object's end time is lower than current time
-            if ((*it)->get_end_time_raw(0) <= start_frame) {
-                (*it)->on_discard(); // Discard the object
-                delete (*it); // (*it) is a pointer to class
-                this->_drawable_list.erase(it--);
+            if (it->get_end_time_raw(0) <= start_frame) {
+                it->on_discard();
+                it->_discarded = true;
+                this->_drawables_to_be_discarded.push(it);
             }
             else
-                (*it)->on_frame_update();
+                it->on_frame_update();
         }
 
         // Send the frame to the display

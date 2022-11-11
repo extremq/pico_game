@@ -56,7 +56,7 @@ void Frame::compute_diff() {
 }
 
 // Fill a rectangle in the Frame buffer using memset
-void Frame::fill_rect(uint16_t col, uint16_t row, uint16_t h, uint16_t w, uint16_t color) {
+void Frame::fill_rect(uint16_t col, uint16_t row, int16_t h, int16_t w, uint16_t color) {
     // Validity checks
     if (col >= this->_w || row >= this->_h) return;
     if (w < 1 || h < 1) return;
@@ -77,7 +77,7 @@ void Frame::fill_rect(uint16_t col, uint16_t row, uint16_t h, uint16_t w, uint16
 }
 
 // Draw a horizontal line.
-void Frame::line_horiz(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
+void Frame::line_horiz(uint16_t col, uint16_t row, int16_t l, uint16_t color) {
     // Validity checks
     if (col >= this->_w || col >= this->_h) return;
     if (l < 1) return;
@@ -91,7 +91,7 @@ void Frame::line_horiz(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
 }
 
 // Draw a vertical line.
-void Frame::line_verti(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
+void Frame::line_verti(uint16_t col, uint16_t row, int16_t l, uint16_t color) {
     // Validity checks
     if (col >= this->_w || col >= this->_h) return;
     if (l < 1) return;
@@ -104,7 +104,7 @@ void Frame::line_verti(uint16_t col, uint16_t row, uint16_t l, uint16_t color) {
     }
 }
 
-void Frame::draw_rect(uint16_t col, uint16_t row, uint16_t h, uint16_t w, uint16_t color) {
+void Frame::draw_rect(uint16_t col, uint16_t row, int16_t h, int16_t w, uint16_t color) {
     // Validity checks
     if (col >= this->_w || row >= this->_h) return;
     if (w < 1 || h < 1) return;
@@ -129,9 +129,10 @@ void Frame::draw_rect(uint16_t col, uint16_t row, uint16_t h, uint16_t w, uint16
 
 // Pretty expensive? Should use sprites instead.
 // Either way I only process one quadrant and use symmetry to render the rest of the quadrants
-void Frame::draw_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) {
+void Frame::draw_circle(uint16_t col, uint16_t row, int16_t r, uint16_t color) {
     // Validity checks
     if (col > this->_w || row > this->_h) return;
+    if (r < 1) return;
 
     // Consider col and row the origin point of the circle.
     int32_t x_col, col_x;
@@ -159,9 +160,10 @@ void Frame::draw_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) 
     }
 }
 
-void Frame::fill_circle(uint16_t col, uint16_t row, uint16_t r, uint16_t color) {
+void Frame::fill_circle(uint16_t col, uint16_t row, int16_t r, uint16_t color) {
     // Validity checks
     if (col > this->_w || row > this->_h) return;
+    if (r < 1) return;
 
     // Consider col and row the origin point of the circle.
     int32_t x_col, col_x;

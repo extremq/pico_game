@@ -25,6 +25,7 @@ private:
     static GameEngine* _instance;
     GameEngine() = default;
     uint64_t _id_cnt = 1; // Used for assigning a unique id to events and drawables
+    uint16_t _bg_color = 0x0;
 
     Time* _time = Time::get();
     Display* _display = Display::get();
@@ -48,12 +49,21 @@ public:
         }
         return _instance;
     }
+
+    void set_bg_color(uint16_t color) {
+        this->_bg_color = color;
+    }
+
+    uint16_t get_bg_color() {
+        return this->_bg_color;
+    }
+
     void register_event(Event* e);
     void register_drawable(Drawable* d);
     void discard_event(Event* e);
     void discard_drawable(Drawable* d);
     void init(uint8_t h, uint8_t w, uint8_t cs, uint8_t dc, uint8_t sda, uint8_t scl, uint8_t res,
-              uint8_t spi_port, uint8_t xpin, uint8_t ypin);
+              uint8_t spi_port, uint8_t xpin, uint8_t ypin, uint16_t bg_color);
     void start_engine();
 };
 
